@@ -22,7 +22,6 @@ app.get("/", (req, res) => {
 
 app.get('/test-db', async (req, res) => {
   try {
-    // Run a simple query (fetch at most one user)
     const users = await prisma.user.findMany({ take: 1 });
     res.json({ message: 'Database is connected', users });
   } catch (error) {
