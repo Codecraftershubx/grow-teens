@@ -4,21 +4,32 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { RxChevronDown, RxChevronRight } from "react-icons/rx";
 
-const useDropdownMenu = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+interface DropdownMenuReturn {
+  toggleMobileMenu: () => void;
+  toggleDropdown: () => void;
+  openDropdown: () => void;
+  closeDropdown: () => void;
+  animateMobileMenu: "open" | "close";
+  animateMobileMenuButtonSpan: "closed" | ["open", "rotatePhase"];
+  animateDropdownMenu: "open" | "close";
+  animateDropdownMenuIcon: "rotated" | "initial";
+}
 
-  const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
-  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
-  const openDropdown = () => setIsDropdownOpen(true);
-  const closeDropdown = () => setIsDropdownOpen(false);
+const useDropdownMenu = (): DropdownMenuReturn => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
-  const animateMobileMenu = isMobileMenuOpen ? "open" : "close";
-  const animateMobileMenuButtonSpan = isMobileMenuOpen
+  const toggleMobileMenu = (): void => setIsMobileMenuOpen((prev) => !prev);
+  const toggleDropdown = (): void => setIsDropdownOpen((prev) => !prev);
+  const openDropdown = (): void => setIsDropdownOpen(true);
+  const closeDropdown = (): void => setIsDropdownOpen(false);
+
+  const animateMobileMenu: "open" | "close" = isMobileMenuOpen ? "open" : "close";
+  const animateMobileMenuButtonSpan: "closed" | ["open", "rotatePhase"] = isMobileMenuOpen
     ? ["open", "rotatePhase"]
     : "closed";
-  const animateDropdownMenu = isDropdownOpen ? "open" : "close";
-  const animateDropdownMenuIcon = isDropdownOpen ? "rotated" : "initial";
+  const animateDropdownMenu: "open" | "close" = isDropdownOpen ? "open" : "close";
+  const animateDropdownMenuIcon: "rotated" | "initial" = isDropdownOpen ? "rotated" : "initial";
 
   return {
     toggleMobileMenu,
@@ -43,12 +54,13 @@ export function Navbar() {
       <div className="size-full lg:flex lg:items-center lg:justify-between">
         <div className="lg:flex">
           <div className="flex min-h-16 items-center justify-between px-[5%] md:min-h-18 lg:min-h-full lg:px-0">
-            <a href="#" color="text-text-primary" className="text-lg lg:text-xl">
-             GROW TEENS
+            <a href="#" className="text-lg lg:text-xl text-text-primary">
+              GROW TEENS
             </a>
             <button
               className="-mr-2 flex size-12 flex-col items-center justify-center lg:hidden"
               onClick={useActive.toggleMobileMenu}
+              aria-label="Toggle mobile menu"
             >
               <motion.span
                 className="my-[3px] h-0.5 w-6 bg-black"
@@ -147,7 +159,7 @@ export function Navbar() {
                   },
                   close: {
                     visibility: "hidden",
-                    opacity: "0",
+                    opacity: 0,
                     height: "var(--height-close, 0)",
                   },
                 }}
@@ -155,7 +167,7 @@ export function Navbar() {
                 exit="close"
                 animate={useActive.animateDropdownMenu}
                 transition={{ duration: 0.3 }}
-                className="bottom-auto left-0 top-full w-full min-w-full max-w-full overflow-hidden bg-background-primary lg:absolute lg:w-[100vw] lg:border-b lg:border-border-primary lg:px-[5%] lg:[--height-close:auto]"
+                className="bottom-auto left-0 bg-white top-full w-full min-w-full max-w-full overflow-hidden bg-background-primary lg:absolute lg:w-[100vw] lg:border-b lg:border-border-primary lg:px-[5%] lg:[--height-close:auto]"
               >
                 <div className="mx-auto flex size-full max-w-full items-center justify-between">
                   <div className="w-full lg:flex">
@@ -385,8 +397,8 @@ export function Navbar() {
           </motion.div>
         </div>
         <div className="hidden lg:flex lg:gap-4">
-          <button>Join</button>
-          <button>Start</button>
+          <button className="btn-primary">Register</button>
+          <button className="btn-secondary">Login</button>
         </div>
       </div>
     </section>
