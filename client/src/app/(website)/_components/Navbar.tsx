@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { RxChevronDown, RxChevronRight } from "react-icons/rx";
@@ -24,12 +25,17 @@ const useDropdownMenu = (): DropdownMenuReturn => {
   const openDropdown = (): void => setIsDropdownOpen(true);
   const closeDropdown = (): void => setIsDropdownOpen(false);
 
-  const animateMobileMenu: "open" | "close" = isMobileMenuOpen ? "open" : "close";
-  const animateMobileMenuButtonSpan: "closed" | ["open", "rotatePhase"] = isMobileMenuOpen
-    ? ["open", "rotatePhase"]
-    : "closed";
-  const animateDropdownMenu: "open" | "close" = isDropdownOpen ? "open" : "close";
-  const animateDropdownMenuIcon: "rotated" | "initial" = isDropdownOpen ? "rotated" : "initial";
+  const animateMobileMenu: "open" | "close" = isMobileMenuOpen
+    ? "open"
+    : "close";
+  const animateMobileMenuButtonSpan: "closed" | ["open", "rotatePhase"] =
+    isMobileMenuOpen ? ["open", "rotatePhase"] : "closed";
+  const animateDropdownMenu: "open" | "close" = isDropdownOpen
+    ? "open"
+    : "close";
+  const animateDropdownMenuIcon: "rotated" | "initial" = isDropdownOpen
+    ? "rotated"
+    : "initial";
 
   return {
     toggleMobileMenu,
@@ -397,8 +403,8 @@ export function Navbar() {
           </motion.div>
         </div>
         <div className="hidden lg:flex lg:gap-4">
-          <button className="btn-primary">Register</button>
-          <button className="btn-secondary">Login</button>
+          <Button visual="solid">Register</Button>
+          <Button visual="outline">Login</Button>
         </div>
       </div>
     </section>
