@@ -43,12 +43,12 @@ const buttonTheme = {
   },
   variants: {
     solid: {
-      bg: "primary.500",
+      bg: "primary.400",
       color: "white",
       _hover: {
-        bg: "primary.600",
+        bg: "primary.500",
         _disabled: {
-          bg: "primary.500",
+          bg: "primary.300",
         },
       },
       _active: {

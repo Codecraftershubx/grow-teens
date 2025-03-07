@@ -62,7 +62,7 @@ export function Navbar() {
       <div className="size-full lg:flex lg:items-center lg:justify-between">
         <div className="lg:flex">
           <div className="flex min-h-16 items-center justify-between px-[5%] md:min-h-18 lg:min-h-full lg:px-0">
-            <a href="#" className="text-lg lg:text-xl text-text-primary">
+            <a href="#">
               <Image src={logo} alt="GrowTeens logo" className="" />
             </a>
             <button
