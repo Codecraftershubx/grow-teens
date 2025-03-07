@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import HeroBg from "../../../../public/assets/images/hero-background.svg";
-import { Button } from "@/components/ui/button";
+import {Button}  from "@chakra-ui/react";
 
 const Hero = () => {
   return (
@@ -31,8 +31,8 @@ const Hero = () => {
                 the global economy through innovative training and mentorship.
               </p>
               <div className="mt-6 flex justify-center flex-wrap gap-6 md:mt-8">
-                <Button visual="solid">Join</Button>
-                <Button visual="outline">Learn More</Button>
+                <Button variant="solid">Join</Button>
+                <Button variant="outline">Learn More</Button>
               </div>
             </div>
           </div>

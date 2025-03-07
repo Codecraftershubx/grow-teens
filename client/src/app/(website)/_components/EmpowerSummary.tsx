@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Text } from "@chakra-ui/react";
 import React from "react";
 import { RxChevronRight } from "react-icons/rx";
 
@@ -11,6 +12,7 @@ const EmpowerSummary = () => {
         <div className="grid grid-cols-1 gap-y-12 md:grid-cols-2 md:items-center md:gap-x-12 lg:gap-x-20">
           <div>
             <p className="mb-3 font-semibold md:mb-4">Empower</p>
+            <Text fontSize="4xl">Unlock Your Potential with GrowTeens Programs</Text>
             <h2 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
               Unlock Your Potential with GrowTeens Programs
             </h2>

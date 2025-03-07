@@ -1,9 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import React, { useState } from "react";
 import { RxChevronDown, RxChevronRight } from "react-icons/rx";
+import logo from "../../../../public/assets/images/logo.svg";
 
 interface DropdownMenuReturn {
   toggleMobileMenu: () => void;
@@ -61,7 +63,7 @@ export function Navbar() {
         <div className="lg:flex">
           <div className="flex min-h-16 items-center justify-between px-[5%] md:min-h-18 lg:min-h-full lg:px-0">
             <a href="#" className="text-lg lg:text-xl text-text-primary">
-              GROW TEENS
+              <Image src={logo} alt="GrowTeens logo" className="" />
             </a>
             <button
               className="-mr-2 flex size-12 flex-col items-center justify-center lg:hidden"
@@ -403,8 +405,8 @@ export function Navbar() {
           </motion.div>
         </div>
         <div className="hidden lg:flex lg:gap-4">
-          <Button visual="solid">Register</Button>
-          <Button visual="outline">Login</Button>
+          <Button variant="solid">Register</Button>
+          <Button variant="outline">Login</Button>
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto_Flex, Istok_Web } from "next/font/google";
-import { Provider } from "@/components/ui/provider";
+import Provider from "./provider";
 import "./globals.css";
 
 const robotoFlex = Roboto_Flex({
