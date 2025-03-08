@@ -1,4 +1,5 @@
 "use client";
+import { Image } from "@chakra-ui/react";
 import React, { useState } from "react";
 import {
   BiLogoFacebookCircle,
@@ -7,6 +8,7 @@ import {
   BiLogoYoutube,
 } from "react-icons/bi";
 import { FaXTwitter } from "react-icons/fa6";
+import logo from "@public/assets/images/logo.svg";
 
 const useForm = () => {
   const [email, setEmail] = useState("");
@@ -100,8 +102,8 @@ export function Footer() {
   const todayDate = new Date().getFullYear();
 
   return (
-    <footer id="relume" className="px-[5%] py-12 md:py-18 lg:py-20">
-      <div className="">
+    <footer className="px-[5%] py-12 md:py-18 lg:py-20">
+      <div className="container mx-auto">
         {/* Subscription Area */}
         <div className="rb-12 mb-12 flex flex-col items-start justify-between md:mb-18 lg:mb-20 lg:flex-row">
           <div className="rb-6 mb-6 lg:mb-0">
@@ -135,10 +137,7 @@ export function Footer() {
             href="#"
             className="sm:col-start-1 sm:col-end-4 sm:row-start-1 sm:row-end-2 lg:col-start-auto lg:col-end-auto lg:row-start-auto lg:row-end-auto"
           >
-            <img
-              src="https://d22po4pjz3o32e.cloudfront.net/logo-image.svg"
-              alt="Logo image"
-            />
+             <Image src={logo.src} alt="GrowTeens logo" className="" />
           </a>
           {/* Link Groups */}
           {linkGroups.map((group, idx) => (
