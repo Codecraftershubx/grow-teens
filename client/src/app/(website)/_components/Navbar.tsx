@@ -1,9 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, Image } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { RxChevronDown, RxChevronRight } from "react-icons/rx";
+import logo from "../../../../public/assets/images/logo.svg";
 
 interface DropdownMenuReturn {
   toggleMobileMenu: () => void;
@@ -60,8 +61,8 @@ export function Navbar() {
       <div className="size-full lg:flex lg:items-center lg:justify-between">
         <div className="lg:flex">
           <div className="flex min-h-16 items-center justify-between px-[5%] md:min-h-18 lg:min-h-full lg:px-0">
-            <a href="#" className="text-lg lg:text-xl text-text-primary">
-              GROW TEENS
+            <a href="#">
+              <Image src={logo.src} alt="GrowTeens logo" className="" />
             </a>
             <button
               className="-mr-2 flex size-12 flex-col items-center justify-center lg:hidden"
@@ -187,7 +188,7 @@ export function Navbar() {
                           className="grid w-full grid-cols-[max-content_1fr] items-start gap-x-3 py-2"
                         >
                           <div className="flex size-6 flex-col items-center justify-center">
-                            <img
+                            <Image
                               src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
                               alt="Icon 1"
                             />
@@ -204,7 +205,7 @@ export function Navbar() {
                           className="grid w-full grid-cols-[max-content_1fr] items-start gap-x-3 py-2"
                         >
                           <div className="flex size-6 flex-col items-center justify-center">
-                            <img
+                            <Image
                               src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
                               alt="Icon 2"
                             />
@@ -221,7 +222,7 @@ export function Navbar() {
                           className="grid w-full grid-cols-[max-content_1fr] items-start gap-x-3 py-2"
                         >
                           <div className="flex size-6 flex-col items-center justify-center">
-                            <img
+                            <Image
                               src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
                               alt="Icon 3"
                             />
@@ -238,7 +239,7 @@ export function Navbar() {
                           className="grid w-full grid-cols-[max-content_1fr] items-start gap-x-3 py-2"
                         >
                           <div className="flex size-6 flex-col items-center justify-center">
-                            <img
+                            <Image
                               src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
                               alt="Icon 4"
                             />
@@ -260,7 +261,7 @@ export function Navbar() {
                           className="grid w-full grid-cols-[max-content_1fr] items-start gap-x-3 py-2"
                         >
                           <div className="flex size-6 flex-col items-center justify-center">
-                            <img
+                            <Image
                               src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
                               alt="Icon 5"
                             />
@@ -277,7 +278,7 @@ export function Navbar() {
                           className="grid w-full grid-cols-[max-content_1fr] items-start gap-x-3 py-2"
                         >
                           <div className="flex size-6 flex-col items-center justify-center">
-                            <img
+                            <Image
                               src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
                               alt="Icon 6"
                             />
@@ -294,7 +295,7 @@ export function Navbar() {
                           className="grid w-full grid-cols-[max-content_1fr] items-start gap-x-3 py-2"
                         >
                           <div className="flex size-6 flex-col items-center justify-center">
-                            <img
+                            <Image
                               src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
                               alt="Icon 7"
                             />
@@ -313,7 +314,7 @@ export function Navbar() {
                           className="grid w-full grid-cols-[max-content_1fr] items-start gap-x-3 py-2"
                         >
                           <div className="flex size-6 flex-col items-center justify-center">
-                            <img
+                            <Image
                               src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
                               alt="Icon 8"
                             />
@@ -338,7 +339,7 @@ export function Navbar() {
                             className="flex auto-cols-fr grid-cols-[0.6fr_1fr] flex-col gap-x-6 py-2 md:grid"
                           >
                             <div className="relative w-full pt-[66.66%]">
-                              <img
+                              <Image
                                 src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
                                 alt="Relume placeholder image 1"
                                 className="absolute inset-0 size-full object-cover"
@@ -363,7 +364,7 @@ export function Navbar() {
                             className="flex auto-cols-fr grid-cols-[0.6fr_1fr] flex-col gap-x-6 py-2 md:grid"
                           >
                             <div className="relative w-full pt-[66.66%]">
-                              <img
+                              <Image
                                 src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
                                 alt="Relume placeholder image 2"
                                 className="absolute inset-0 size-full object-cover"
@@ -403,8 +404,8 @@ export function Navbar() {
           </motion.div>
         </div>
         <div className="hidden lg:flex lg:gap-4">
-          <Button visual="solid">Register</Button>
-          <Button visual="outline">Login</Button>
+          <Button variant="solid">Register</Button>
+          <Button variant="outline">Login</Button>
         </div>
       </div>
     </section>
