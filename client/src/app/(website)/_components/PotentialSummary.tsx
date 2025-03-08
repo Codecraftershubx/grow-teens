@@ -42,6 +42,7 @@ const PotentialSummary = () => {
                 fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
                 mb={[2, 4]}
                 className="md:leading-[1.3]"
+                color="secondary.600"
               >
                 Comprehensive Digital Skills Training for Teens
               </Text>
@@ -61,6 +62,7 @@ const PotentialSummary = () => {
                 fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
                 mb={[2, 4]}
                 className="md:leading-[1.3]"
+                color="secondary.600"
               >
                 Entrepreneurial Support to Launch Your Ideas
               </Text>
@@ -82,6 +84,7 @@ const PotentialSummary = () => {
                 fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
                 mb={[2, 4]}
                 className="md:leading-[1.3]"
+                color="secondary.600"
               >
                 Leadership Development for Future Change Makers
               </Text>
