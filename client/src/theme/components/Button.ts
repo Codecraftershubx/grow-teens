@@ -55,6 +55,11 @@ const buttonTheme = {
         bg: "primary.700",
       },
     },
+    outline: {
+      _hover: {
+        bg: "primary.100",
+      },
+    }
   },
   defaultProps: {
     size: "md",

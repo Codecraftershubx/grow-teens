@@ -12,7 +12,7 @@ const PotentialSummary = () => {
       <div className="flex flex-col items-start">
         <div className="rb-12 mb-12 grid grid-cols-1 items-start justify-between gap-5 md:mb-18 md:grid-cols-2 md:gap-x-12 md:gap-y-8 lg:mb-20 lg:gap-x-20">
           <div>
-            <p className="mb-3 font-semibold md:mb-4">Empower</p>
+            <p className="mb-3 font-semibold md:mb-4 text-primary-600">Empower</p>
             <h2 className="text-5xl font-bold md:text-7xl lg:text-8xl">
               Unlock Your Potential with GrowTeens
             </h2>
@@ -72,7 +72,7 @@ const PotentialSummary = () => {
         </div>
         <div className="mt-10 flex items-center gap-4 md:mt-14 lg:mt-16">
           <Button variant="outline">Join Us</Button>
-          <Button rightIcon={<RxChevronRight />} variant="link">
+          <Button rightIcon={<RxChevronRight />} variant="ghost">
             Learn More
           </Button>
         </div>
