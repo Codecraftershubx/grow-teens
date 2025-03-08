@@ -1,7 +1,6 @@
 "use client";
 
-import { Text, Button } from "@chakra-ui/react";
-import Image from "next/image";
+import { Button, Image } from "@chakra-ui/react";
 import React from "react";
 import { RxChevronRight } from "react-icons/rx";
 
@@ -30,7 +29,7 @@ const PotentialSummary = () => {
         <div className="grid grid-cols-1 items-start gap-y-12 md:grid-cols-3 md:gap-x-8 md:gap-y-16 lg:gap-x-12">
           <div>
             <div className="rb-5 mb-5 md:mb-6">
-              <img
+              <Image
                 src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
                 alt="Relume logo"
                 className="size-12"
@@ -43,7 +42,7 @@ const PotentialSummary = () => {
           </div>
           <div>
             <div className="rb-5 mb-5 md:mb-6">
-              <img
+              <Image
                 src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
                 alt="Relume logo"
                 className="size-12"
@@ -58,9 +57,9 @@ const PotentialSummary = () => {
           </div>
           <div>
             <div className="rb-5 mb-5 md:mb-6">
-              <img
+              <Image
                 src="https://d22po4pjz3o32e.cloudfront.net/relume-icon.svg"
-                alt="Relume logo"
+                alt="Img"
                 className="size-12"
               />
             </div>
