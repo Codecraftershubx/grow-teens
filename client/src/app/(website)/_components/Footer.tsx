@@ -100,8 +100,8 @@ export function Footer() {
   const todayDate = new Date().getFullYear();
 
   return (
-    <footer id="relume" className="px-[5%] py-12 md:py-18 lg:py-20">
-      <div className="">
+    <footer className="px-[5%] py-12 md:py-18 lg:py-20">
+      <div className="container mx-auto">
         {/* Subscription Area */}
         <div className="rb-12 mb-12 flex flex-col items-start justify-between md:mb-18 lg:mb-20 lg:flex-row">
           <div className="rb-6 mb-6 lg:mb-0">
