@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto_Flex, Istok_Web } from "next/font/google";
+import Provider from "./provider";
 import "./globals.css";
 
 const robotoFlex = Roboto_Flex({
@@ -24,12 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className='light' suppressHydrationWarning>
+    <html lang="en" className="light" suppressHydrationWarning>
       <body
         className={`${robotoFlex.variable} ${istokWeb.variable} antialiased`}
         suppressHydrationWarning
       >
-        {children}
+        <Provider>{children}</Provider>
       </body>
     </html>
   );
