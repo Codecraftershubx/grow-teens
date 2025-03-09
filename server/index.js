@@ -1,13 +1,6 @@
 import express from "express";
 import cors from "cors";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 import router from "./routes/index.js";
-
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
 
 const app = express();
 
@@ -33,6 +26,7 @@ app.use(function (req, res, next) {
 });
 
 app.use("/auth", router.users);
+app.use("/programs", router.programs);
 
 // app.get('/test-db', async (req, res) => {
 //   try {

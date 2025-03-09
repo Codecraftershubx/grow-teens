@@ -4,7 +4,6 @@ const prisma = new PrismaClient();
 
 const getUser = async (req, res) => {
   const { id } = req.params;
-  console.log("id", id);
   try {
     const user = await prisma.user.findUnique({
       where: { id: Number(id) },
