@@ -9,9 +9,76 @@ datasource db {
 
 model User {
   id             Int           @id @default(autoincrement())
-  name           String?
+  firstName      String
+  lastName       String
   email          String        @unique
   password       String
-  role           String        @default("teenager") // teenager, mentor, admin, sponsor, school_rep
+  role           UserRole      @default(TEEN)
+  age            Int?
   createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  enrollments    Enrollment[]
+  mentor         Mentorship[]  @relation("Mentor")
+  mentee         Mentorship[]  @relation("Mentee")
+}
+
+enum UserRole {
+  MENTOR
+  SPONSORS
+  TEEN
+}
+
+model Program {
+  id             Int             @id @default(autoincrement())
+  title          String
+  description    String
+  type           ProgramType     
+  startDate      DateTime
+  endDate        DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  enrollments    Enrollment[]
+  modules        CourseModule[]
+}
+
+enum ProgramType {
+  HEALTH
+  TECH
+  FINANCIAL_LITERACY
+}
+
+model CourseModule {
+  id          Int       @id @default(autoincrement())
+  programId   Int
+  title       String
+  description String
+  content     String?   
+  program     Program   @relation(fields: [programId], references: [id])
+}
+
+model Enrollment {
+  id             Int       @id @default(autoincrement())
+  userId         Int
+  programId      Int
+  enrollmentDate DateTime  @default(now())
+  status         StatusType
+  user           User    @relation(fields: [userId], references: [id])
+  program        Program @relation(fields: [programId], references: [id])
+}
+
+enum StatusType {
+  PENDING
+  ACTIVE 
+  COMPLETED
+}
+
+model Mentorship {
+  id         Int       @id @default(autoincrement())
+  mentorId   Int
+  menteeId   Int
+  startDate  DateTime  @default(now())
+  endDate    DateTime?
+  status     StatusType 
+  mentor     User      @relation("Mentor", fields: [mentorId], references: [id])
+  mentee     User      @relation("Mentee", fields: [menteeId], references: [id])
 }
