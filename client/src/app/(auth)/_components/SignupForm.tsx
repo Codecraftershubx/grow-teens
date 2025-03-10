@@ -20,14 +20,15 @@ import { useSearchParams } from "next/navigation";
 import ErrorMessage from "./ErrorMessage";
 import { signIn } from "next-auth/react";
 import requestClient from "@/lib/requestClient";
+import { handleServerErrorMessage } from "@/utils";
 
 interface IFormInput {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  age: number;
-  userType: "TEEN" | "MENTOR" | "SPONSORS" | "ADMIN";
+  age?: number;
+  role: "TEEN" | "MENTOR" | "SPONSORS" | "ADMIN";
 }
 
 export default function SignupForm() {
@@ -41,10 +42,12 @@ export default function SignupForm() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
-  } = useForm<IFormInput>({
-    mode: "onChange",
-  });
+  } = useForm<IFormInput>({ mode: "onChange" });
+
+  // Watch the role field
+  const selectedUserType = watch("role");
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setIsLoading(true);
@@ -85,7 +88,8 @@ export default function SignupForm() {
       setErrorMessage(loginResponse.error);
     } catch (error: any) {
       setIsLoading(false);
-      setErrorMessage(error.message);
+      const errorMessage = handleServerErrorMessage(error);
+      setErrorMessage(errorMessage);
     }
   };
 
@@ -99,6 +103,7 @@ export default function SignupForm() {
           onClose={() => setErrorMessage(null)}
         />
       )}
+
       <div className="flex flex-col gap-5 text-gray">
         {/* First Name Field */}
         <FormControl isInvalid={!!errors.firstName?.message} mb={5}>
@@ -214,54 +219,56 @@ export default function SignupForm() {
           )}
         </FormControl>
 
-        {/* Age Field */}
-        <FormControl isInvalid={!!errors.age?.message} mb={5}>
-          <FormLabel htmlFor="age">
-            Age
-            <Text as="span" color="red.500">
-              *
-            </Text>
-          </FormLabel>
-          <Input
-            id="age"
-            type="number"
-            placeholder="Enter your age"
-            isDisabled={isLoading}
-            {...register("age", {
-              required: "Age is required",
-              min: { value: 13, message: "Minimum age is 13" },
-              max: { value: 19, message: "Maximum age is 19" },
-            })}
-          />
-          {errors.age && (
-            <Text as="span" color="red.500">
-              {errors.age?.message}
-            </Text>
-          )}
-        </FormControl>
+        {/* Conditionally render Age Field if role is TEEN */}
+        {selectedUserType === "TEEN" && (
+          <FormControl isInvalid={!!errors.age?.message} mb={5}>
+            <FormLabel htmlFor="age">
+              Age
+              <Text as="span" color="red.500">
+                *
+              </Text>
+            </FormLabel>
+            <Input
+              id="age"
+              type="number"
+              placeholder="Enter your age"
+              isDisabled={isLoading}
+              {...register("age", {
+                required: "Age is required",
+                min: { value: 13, message: "Minimum age is 13" },
+                max: { value: 19, message: "Maximum age is 19" },
+              })}
+            />
+            {errors.age && (
+              <Text as="span" color="red.500">
+                {errors.age?.message}
+              </Text>
+            )}
+          </FormControl>
+        )}
 
         {/* User Type Select Field */}
-        <FormControl isInvalid={!!errors.userType?.message} mb={5}>
-          <FormLabel htmlFor="userType">
+        <FormControl isInvalid={!!errors.role?.message} mb={5}>
+          <FormLabel htmlFor="role">
             User Type
             <Text as="span" color="red.500">
               *
             </Text>
           </FormLabel>
           <Select
-            id="userType"
+            id="role"
             placeholder="Select user type"
             isDisabled={isLoading}
-            {...register("userType", { required: "User type is required" })}
+            {...register("role", { required: "User type is required" })}
           >
             <option value="TEEN">Teen</option>
             <option value="MENTOR">Mentor</option>
             <option value="SPONSORS">Sponsors</option>
             <option value="ADMIN">Admin</option>
           </Select>
-          {errors.userType && (
+          {errors.role && (
             <Text as="span" color="red.500">
-              {errors.userType?.message}
+              {errors.role?.message}
             </Text>
           )}
         </FormControl>
