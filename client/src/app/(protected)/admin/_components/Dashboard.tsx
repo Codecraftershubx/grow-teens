@@ -14,8 +14,8 @@ import {
   Thead,
   Tr,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
+import OverviewCard from "../../_components/OverviewCard";
 
 interface User {
   id: number;
@@ -24,15 +24,13 @@ interface User {
   role: string;
 }
 
-const AdminDashboard = () => {
-  // Example metrics data (replace with API data)
-  const metrics = {
-    totalUsers: 1200,
-    activeCourses: 35,
-    pendingMentorships: 10,
-    totalEvents: 5,
-  };
+interface Metrics {
+  id: number;
+  title: string;  
+  value: string;
+}
 
+const AdminDashboard = () => {
   // Example user registrations (replace with dynamic data)
   const users: User[] = [
     { id: 1, name: "John Doe", email: "john@example.com", role: "TEEN" },
@@ -45,7 +43,12 @@ const AdminDashboard = () => {
     },
   ];
 
-  const cardBg = "gray.100";
+  const metricsOverview: Metrics[] = [
+    { id: 1, title: "Total Users", value: "1200" },
+    { id: 2, title: "Active Courses", value: "35" },
+    { id: 3, title: "Pending Mentorships", value: "10" },
+    { id: 4, title: "Total Events", value: "5" },
+  ];
 
   return (
     <Box p={6}>
@@ -57,22 +60,9 @@ const AdminDashboard = () => {
 
       {/* Metrics Overview */}
       <SimpleGrid columns={{ base: 1, md: 4 }} spacing={6} mb={6}>
-        <Box p={4} bg={cardBg} borderRadius="md" boxShadow="md">
-          <Text fontWeight="bold">Total Users</Text>
-          <Text fontSize="2xl">{metrics.totalUsers}</Text>
-        </Box>
-        <Box p={4} bg={cardBg} borderRadius="md" boxShadow="md">
-          <Text fontWeight="bold">Active Courses</Text>
-          <Text fontSize="2xl">{metrics.activeCourses}</Text>
-        </Box>
-        <Box p={4} bg={cardBg} borderRadius="md" boxShadow="md">
-          <Text fontWeight="bold">Pending Mentorships</Text>
-          <Text fontSize="2xl">{metrics.pendingMentorships}</Text>
-        </Box>
-        <Box p={4} bg={cardBg} borderRadius="md" boxShadow="md">
-          <Text fontWeight="bold">Total Events</Text>
-          <Text fontSize="2xl">{metrics.totalEvents}</Text>
-        </Box>
+        {metricsOverview.map((item) => (
+          <OverviewCard key={item.id} item={item} />
+        ))}
       </SimpleGrid>
 
       <Divider my={6} />
