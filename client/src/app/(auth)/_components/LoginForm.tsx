@@ -5,7 +5,6 @@ import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FiEyeOff } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
-import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import {
@@ -191,22 +190,6 @@ export default function LoginForm() {
           loadingText="Submitting"
         >
           Sign In
-        </Button>
-        <Button
-          variant={"outline"}
-          size="lg"
-          borderColor={"gray.300"}
-          className="w-full cursor-pointer text-gray border"
-          leftIcon={<FcGoogle className="text-2xl" />}
-          isDisabled={isLoading}
-          onClick={() =>
-            signIn("google", {
-              callbackUrl:
-                searchParams.get("callbackUrl") || `${window.location.origin}/`,
-            })
-          }
-        >
-          Sign In with Google
         </Button>
       </div>
     </form>
