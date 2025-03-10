@@ -8,11 +8,8 @@ import { signOut, useSession } from "next-auth/react";
 import { NextAuthUserSession } from "@/types";
 import {
   Avatar,
-  Tag,
-  TagLabel,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { convertLetterCase } from "@/utils";
 import GreetingComponent from "./GreetingComponent";
 
 const DashboardNavbar = () => {

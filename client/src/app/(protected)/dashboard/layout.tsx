@@ -27,7 +27,7 @@ export default async function VendorLayout({
     <>
       <DashboardNavbar />
       <SideBar />
-      <main className="lg:pl-72 lg:pt-[98px] bg-[#F9FAFB]">
+      <main className="lg:pl-60 lg:pt-[98px] bg-[#F9FAFB]">
         <div className="min-h-[calc(100vh-150px)]">
           {children}
         </div>

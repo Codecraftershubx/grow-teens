@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import multer from "multer";
-import fetch from "node-fetch";
 import bodyParser from "body-parser";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -124,6 +123,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
 app.use("/courses", router.courses);
 app.use("/auth", router.users);
 app.use("/programs", router.programs);
+app.use("/enrollments", router.enrollments);
 
 // app.get('/test-db', async (req, res) => {
 //   try {

@@ -81,7 +81,7 @@ const SideBar = () => {
       mt={{ lg: "98px" }}
       position="fixed"
       zIndex={50}
-      w="72"
+      w="60"
       h="calc(100vh - 98px)"
     >
       <SidebarContent pathname={pathname} />
