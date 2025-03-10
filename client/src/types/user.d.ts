@@ -1,6 +1,6 @@
 import { Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
-import { BusinessStatus } from "../constants/enum";
+import { UserType } from "../constants/enum";
 
 export interface Account {
   providerAccountId: number | string;
@@ -10,22 +10,15 @@ export interface Account {
 
 export interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone?: string;
   active: boolean;
   status?: number;
-  avatar?: string;
-  picture?: string;
-  owner: boolean;
-  emailVerifiedAt: string;
-  entityType: string;
-  businessName: string;
-  businessStatus: BusinessStatus;
-  completeProfile: boolean;
+  role: UserType;
   createdAt?: string;
   updatedAt?: string;
-  dateJoined?: string;
 }
 
 export interface SingleUser {
@@ -42,18 +35,15 @@ export interface NextAuthUserSession extends Session {
 }
 
 interface NextAuthUserSessionWithToken extends JWT {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   picture: string;
   sub: string;
   id: number;
   active: boolean;
   emailVerifiedAt: string;
-  entityType: string;
-  businessName: string;
-  businessStatus: string;
-  owner: boolean;
-  completeProfile: boolean;
+  role: UserType;
   token: string;
   account: Account;
   iat: number;

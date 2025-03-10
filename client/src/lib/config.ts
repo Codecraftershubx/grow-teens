@@ -4,8 +4,7 @@ const config: IConfig = {
   appEnv: process.env.NEXT_PUBLIC_APP_ENV as
     | "dev"
     | "staging"
-    | "prod"
-    | "sandbox",
+    | "prod",
   nodeEnv: process.env.NODE_ENV as "dev" | "prod" | "test",
   appName: process.env.NEXT_PUBLIC_APP_NAME ?? "GrowTeens",
   appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "",

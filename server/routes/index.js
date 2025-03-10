@@ -1,9 +1,11 @@
 import users from "./user.js";
 import programs from "./program.js";
+import courses from "./course.js";
 
 const routes = {
   users,
-  programs
+  programs,
+  courses
 };
 
 export default routes;
