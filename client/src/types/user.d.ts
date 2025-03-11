@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import { UserType } from "../constants/enum";
@@ -30,6 +31,7 @@ export interface SingleUser {
 export interface NextAuthUserSession extends Session {
   user: User & {
     account: Account;
+    enrollments: any;
     token?: string;
   };
 }

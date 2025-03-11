@@ -5,6 +5,7 @@ import config from "@/lib/config";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { NextAuthUserSession } from "@/types";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const appName = config.appName;
 
@@ -18,7 +19,7 @@ export default async function VendorLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session: NextAuthUserSession = (await getServerSession())!;
+  const session: NextAuthUserSession = (await getServerSession(authOptions))!;
   if (!session) redirect("/auth/signin");
   if (session.user?.role !== "ADMIN") redirect("/");
   

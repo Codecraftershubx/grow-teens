@@ -27,6 +27,7 @@ import {
   Textarea,
   useDisclosure,
   Text,
+  Select,
 } from "@chakra-ui/react";
 import { toast } from "react-toastify";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -142,10 +143,14 @@ const ProgramManagement = () => {
                 </FormControl>
                 <FormControl isRequired>
                   <FormLabel>Type</FormLabel>
-                  <Input
+                  <Select
                     {...register("type", { required: "Type is required" })}
-                    placeholder="e.g., Digital, Tech, Health"
-                  />
+                    placeholder="Select program type"
+                  >
+                    <option value="FINANCIAL_LITERACY">Finance</option>
+                    <option value="TECH">Tech</option>
+                    <option value="HEALTH">Health</option>
+                  </Select>
                   {errors.type && (
                     <Box color="red.500">{errors.type.message}</Box>
                   )}

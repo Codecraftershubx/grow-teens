@@ -54,6 +54,7 @@ export default function SignupForm() {
     try {
       const response = await requestClient().post("/auth/signup", {
         ...data,
+        age: Number(data.age) || null,
       });
       const { status, message } = response.data;
 

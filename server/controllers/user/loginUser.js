@@ -11,7 +11,15 @@ const loginUser = async (req, res) => {
     if ([email, password].some((field) => !field || field.trim() === "")) {
       return res.status(400).json({ error: "Email and password are required" });
     }
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: {
+        enrollments: true,
+        enrollments: {
+          include: { program: true, program: { include: { modules: true } } },
+        },
+      },
+    });
     if (!user) {
       return res.status(401).json({ error: "Invalid email or password" });
     }

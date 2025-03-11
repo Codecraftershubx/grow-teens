@@ -40,6 +40,7 @@ export const authOptions = {
             lastName: user.lastName,
             role: user.role,
             age: user?.age,
+            enrollments: user?.enrollments,
             token: accessToken.token,
           };
         } catch (error) {
@@ -66,6 +67,7 @@ export const authOptions = {
         token.lastName = user.lastName;
         token.role = user.role;
         token.age = user?.age;
+        token.enrollments = user?.enrollments;
         token.token = user?.token;
       }
       return token;

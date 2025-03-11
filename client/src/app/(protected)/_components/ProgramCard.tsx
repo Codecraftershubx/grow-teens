@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Box, Image, Text, VStack, Button } from "@chakra-ui/react";
+import { Box, Image, Text, Button } from "@chakra-ui/react";
 
 interface CourseCardProps {
   image: string;
   title: string;
   description: string;
-  programs: string[];
-  statusType: "PENDING" | "ACTIVE" | "COMPLETED";
+  programs?: any;
+  statusType?: "PENDING" | "ACTIVE" | "COMPLETED";
   enrollDate?: string;
   onEnroll?: () => void;
 }
@@ -16,7 +17,6 @@ const ProgramCard = ({
   image,
   title,
   description,
-  programs,
   statusType,
   enrollDate,
   onEnroll,
@@ -48,18 +48,6 @@ const ProgramCard = ({
       <Text fontSize="sm" color="gray.600" mb={3}>
         {description}
       </Text>
-
-      <VStack align="start" spacing={1} mb={3} mt="auto">
-        {/* <Text fontWeight="bold" color="black">
-          Programs:
-        </Text> */}
-        {programs &&
-          programs.map((program, index) => (
-            <Text key={index} fontSize="sm" color="black">
-              - {program}
-            </Text>
-          ))}
-      </VStack>
 
       {statusType === "PENDING" ? (
         <Button colorScheme="red" w="full" onClick={onEnroll}>

@@ -64,7 +64,7 @@ model Enrollment {
   userId         Int
   programId      Int
   enrollmentDate DateTime  @default(now())
-  status         StatusType
+  status         StatusType @default(PENDING)
   user           User    @relation(fields: [userId], references: [id])
   program        Program @relation(fields: [programId], references: [id])
 }

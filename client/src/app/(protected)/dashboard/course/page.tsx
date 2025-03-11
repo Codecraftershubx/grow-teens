@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useCallback, useEffect, useState, useTransition } from "react";
@@ -19,6 +20,8 @@ import {
 } from "@chakra-ui/react";
 import ProgramCard from "../../_components/ProgramCard";
 import requestClient from "@/lib/requestClient";
+import { useSession } from "next-auth/react";
+import { NextAuthUserSession } from "@/types";
 
 interface Course {
   id: number;
@@ -33,14 +36,18 @@ interface Course {
 const TeensCoursesPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [enrolledProgram, setEnrolledProgram] = useState<any | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
   const [isPending, startTransition] = useTransition();
+
+  const session = useSession();
+  const sessionData = session.data as NextAuthUserSession;
 
   // Fetch Courses from API
   const fetchCourses = useCallback(() => {
     startTransition(async () => {
       try {
-        const response = await requestClient().get("/courses");
+        const response = await requestClient().get("/programs");
         if (!response.data) {
           return;
         }
@@ -54,6 +61,14 @@ const TeensCoursesPage = () => {
   useEffect(() => {
     fetchCourses();
   }, [fetchCourses]);
+
+  useEffect(() => {
+    if (sessionData?.user) {
+      setEnrolledProgram(sessionData.user.enrollments);
+    }
+  }, [enrolledProgram, sessionData]);
+
+  console.log(enrolledProgram);
 
   const handleCourseClick = (course: Course) => {
     setSelectedCourse(course);
@@ -78,18 +93,20 @@ const TeensCoursesPage = () => {
             }}
             gap={6}
           >
-            {courses.map((course) => (
-              <ProgramCard
-                key={course.id}
-                image={course.image}
-                title={course.title}
-                programs={course.programs}
-                statusType={course.statusType}
-                enrollDate={course.enrollDate}
-                description={course.description}
-                onEnroll={() => handleCourseClick(course)}
-              />
-            ))}
+            {enrolledProgram &&
+              enrolledProgram.map((program: any) => {
+                const programData = program.program;
+                return (
+                  <ProgramCard
+                    key={program.id}
+                    image={programData.image}
+                    title={programData.title}
+                    statusType={program.statusType}
+                    description={programData.description}
+                    onEnroll={() => handleCourseClick(programData)}
+                  />
+                );
+              })}
           </Grid>
         )}
 
@@ -148,7 +165,6 @@ const TeensCoursesPage = () => {
                 key={course.id}
                 image={course.image}
                 title={course.title}
-                programs={course.programs}
                 statusType={course.statusType}
                 enrollDate={course.enrollDate}
                 description={course.description}

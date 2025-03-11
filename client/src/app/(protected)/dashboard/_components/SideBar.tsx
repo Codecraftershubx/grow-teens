@@ -22,7 +22,7 @@ import { BiMessageDetail } from "react-icons/bi";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
-  { name: "My Courses", href: "/dashboard/course", icon: LuFileText, current: false },
+  { name: "Programs", href: "/dashboard/course", icon: LuFileText, current: false },
   {
     name: "Message",
     href: "/dashboard/messages",
