@@ -1,6 +1,6 @@
 import { NextAuthUserSession } from "@/types";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import Dashboard from "./_components/Dashboard";
 
 const AdminDashboard = async () => {

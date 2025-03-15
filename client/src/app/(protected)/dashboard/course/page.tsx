@@ -33,21 +33,25 @@ const TeensCoursesPage = () => {
   const fetchCourses = useCallback(() => {
     startTransition(async () => {
       try {
-        const response = await requestClient().get("/programs");
+        const response = await requestClient({
+          token: sessionData?.user?.token,
+        }).get("/programs");
         if (!response.data) {
           return;
         }
-        setCourses(response.data);
+        setCourses(response.data?.data);
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
     });
-  }, []);
+  }, [sessionData?.user?.token]);
 
   const fetchEnrolledProgram = useCallback((userId: any) => {
     startTransition(async () => {
       try {
-        const response = await requestClient().get(`/enrollments/${userId}`);
+        const response = await requestClient({
+          token: sessionData?.user?.token,
+        }).get(`/enrollments/${userId}`);
         if (!response.data) {
           return;
         }
@@ -56,11 +60,13 @@ const TeensCoursesPage = () => {
         console.error("Error fetching courses:", error);
       }
     });
-  }, []);
+  }, [sessionData?.user?.token]);
 
   useEffect(() => {
-    fetchCourses();
-  }, [fetchCourses]);
+    if (sessionData?.user) {
+      fetchCourses();
+    }
+  }, [fetchCourses, sessionData]);
 
   useEffect(() => {
     if (sessionData?.user) {

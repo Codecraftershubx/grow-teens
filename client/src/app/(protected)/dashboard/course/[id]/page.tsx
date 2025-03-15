@@ -49,7 +49,9 @@ const Page = ({ params: paramsPromise }: PageProps) => {
     if (!programId) return;
     setLoading(true);
     try {
-      const response = await requestClient().get(`/programs/${programId}`);
+      const response = await requestClient({
+        token: sessionData?.user?.token,
+      }).get(`/programs/${programId}`);
       if (response.status === 200) {
         setProgram(response.data);
       }
@@ -59,7 +61,7 @@ const Page = ({ params: paramsPromise }: PageProps) => {
     } finally {
       setLoading(false);
     }
-  }, [programId]);
+  }, [programId, sessionData?.user?.token]);
 
   useEffect(() => {
     if (!sessionData) return;
@@ -86,6 +88,8 @@ const Page = ({ params: paramsPromise }: PageProps) => {
       }
     });
   };
+
+  console.log("Program ", program);
 
   return (
     <Box p={5}>
@@ -142,9 +146,16 @@ const Page = ({ params: paramsPromise }: PageProps) => {
               Course Modules
             </Heading>
             {program?.modules && program?.modules.length > 0 ? (
-              <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6} mb={6}>
+              <SimpleGrid
+                columns={{ base: 1, md: 2, lg: 3 }}
+                spacing={6}
+                mb={6}
+              >
                 {program?.modules.map((module: any) => (
-                  <Card key={module.id} onClick={() => setSelectedModule(module)}>
+                  <Card
+                    key={module.id}
+                    onClick={() => setSelectedModule(module)}
+                  >
                     <CardBody>
                       <Heading size="sm">{module.title}</Heading>
                       <Text>{module.description}</Text>
@@ -158,9 +169,11 @@ const Page = ({ params: paramsPromise }: PageProps) => {
 
             {selectedModule && (
               <UnorderedList>
-                {JSON.parse(selectedModule.content).map((item: string, i) => (
-                  <ListItem key={i}>{item}</ListItem>
-                ))}
+                {JSON.parse(selectedModule.content).map(
+                  (item: string, i: any) => (
+                    <ListItem key={i}>{item}</ListItem>
+                  )
+                )}
               </UnorderedList>
             )}
           </Box>
