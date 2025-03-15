@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { RxChevronDown, RxChevronRight } from "react-icons/rx";
 import logo from "../../../../public/assets/images/logo.svg";
+import { useRouter } from "next/navigation";
 
 interface DropdownMenuReturn {
   toggleMobileMenu: () => void;
@@ -52,6 +53,8 @@ const useDropdownMenu = (): DropdownMenuReturn => {
 
 export function Navbar() {
   const useActive = useDropdownMenu();
+
+  const router = useRouter();
 
   return (
     <section
@@ -404,8 +407,12 @@ export function Navbar() {
           </motion.div>
         </div>
         <div className="hidden lg:flex lg:gap-4">
-          <Button variant="solid">Register</Button>
-          <Button variant="outline">Login</Button>
+          <Button variant="solid" onClick={() => router.push("/auth/signup")}>
+            Register
+          </Button>
+          <Button variant="outline" onClick={() => router.push("/auth/signin")}>
+            Login
+          </Button>
         </div>
       </div>
     </section>
