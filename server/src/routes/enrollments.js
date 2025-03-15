@@ -14,6 +14,6 @@ enrollRoutes.post("/", [authMiddleware], createEnrollment);
 
 enrollRoutes.get("/:userId", [authMiddleware], getEnrollmentById);
 
-enrollRoutes.get("/:userId/:courseId", getEnrollmentStatus);
+enrollRoutes.get("/:userId/:courseId", [authMiddleware], getEnrollmentStatus);
 
 export default enrollRoutes;
