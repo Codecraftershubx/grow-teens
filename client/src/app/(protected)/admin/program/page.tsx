@@ -35,6 +35,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import "react-toastify/dist/ReactToastify.css";
 import requestClient from "@/lib/requestClient";
 import { convertDate } from "@/utils/formatDate";
+import { useSession } from "next-auth/react";
+import { NextAuthUserSession } from "@/types";
 
 interface Program {
   id: number;
@@ -57,6 +59,10 @@ const ProgramManagement = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isPending, startTransition] = useTransition();
 
+  const session = useSession();
+  const data = session.data as NextAuthUserSession;
+  const sessionData = data?.user;
+
   const {
     register,
     handleSubmit,
@@ -68,7 +74,9 @@ const ProgramManagement = () => {
 
   const fetchPrograms = useCallback(() => {
     startTransition(async () => {
-      const response = await requestClient().get("/programs");
+      const response = await requestClient({ token: sessionData?.token }).get(
+        "/programs"
+      );
       if (!response.data) {
         return;
       }

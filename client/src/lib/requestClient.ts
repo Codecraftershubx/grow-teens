@@ -29,7 +29,7 @@ const getHeaders = (queryParamToken?: string, contentType?: string) => {
 
   if (token || queryParamToken) {
     const authToken = queryParamToken ? queryParamToken : token;
-    headers["Authorization"] = `Bearer ${authToken}`;
+    headers["Authorization"] = `token ${authToken}`;
   }
 
   if (user) {

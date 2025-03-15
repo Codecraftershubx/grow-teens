@@ -4,7 +4,7 @@ import SideBar from "./_components/SideBar";
 import config from "@/lib/config";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { NextAuthUserSession } from "@/types";
 
 const appName = config.appName;
