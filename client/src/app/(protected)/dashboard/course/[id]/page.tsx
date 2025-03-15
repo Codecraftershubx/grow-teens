@@ -33,11 +33,13 @@ const Page = ({ params: paramsPromise }: PageProps) => {
   const [loading, setLoading] = useState(true);
   const [program, setProgram] = useState<any | null>(null);
   const [selectedModule, setSelectedModule] = useState<any | null>(null);
-  const [isEnrolled, setIsEnrolled] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [enrollmentStatus, setEnrollmentStatus] = useState<any | null>(null);
 
   const session = useSession();
   const sessionData = session?.data as NextAuthUserSession;
+
+  const userId = sessionData?.user?.id;
 
   useEffect(() => {
     paramsPromise.then((resolvedParams) => {
@@ -63,24 +65,44 @@ const Page = ({ params: paramsPromise }: PageProps) => {
     }
   }, [programId, sessionData?.user?.token]);
 
+  const fetchEnrollmentStatus = useCallback(async () => {
+    if (!programId) return;
+    setLoading(true);
+    try {
+      const response = await requestClient({
+        token: sessionData?.user?.token,
+      }).get(`/enrollments/${userId}/${programId}`);
+      setEnrollmentStatus(response.data);
+    } catch (error) {
+      console.error("Error fetching enrollment status:", error);
+      toast.error("Error fetching enrollment status");
+    } finally {
+      setLoading(false);
+    }
+  }, [userId, programId, sessionData?.user?.token]);
+
   useEffect(() => {
-    if (!sessionData) return;
+    if (!userId || !sessionData || !programId) return;
+    fetchEnrollmentStatus();
     fetchProgram();
-  }, [fetchProgram, sessionData]);
+  }, [userId, programId, fetchEnrollmentStatus, fetchProgram, sessionData]);
 
   const handleEnroll = () => {
-    if (!sessionData?.user?.id || !programId) {
-      toast.error("Invalid user or program ID.");
+    if (!userId || !programId) {
+      toast.error("User or program is invalid.");
       return;
     }
 
     startTransition(async () => {
       try {
-        await requestClient().post("/enrollments", {
-          userId: sessionData.user.id,
-          programId: Number(programId),
-        });
-        setIsEnrolled(true);
+        await requestClient({ token: sessionData?.user?.token }).post(
+          "/enrollments",
+          {
+            userId: userId,
+            programId: Number(programId),
+          }
+        );
+        fetchEnrollmentStatus();
         toast.success("You have successfully enrolled!");
       } catch (error) {
         console.error(error);
@@ -88,8 +110,6 @@ const Page = ({ params: paramsPromise }: PageProps) => {
       }
     });
   };
-
-  console.log("Program ", program);
 
   return (
     <Box p={5}>
@@ -126,20 +146,36 @@ const Page = ({ params: paramsPromise }: PageProps) => {
               />
             )}
 
-            {!isEnrolled ? (
+            {enrollmentStatus?.enrolled ? (
+              <Box mb={6}>
+                <Text fontSize="md" color="green.600" mb={2}>
+                  You are enrolled in this course.
+                </Text>
+                {enrollmentStatus.enrollmentStatus === "ACTIVE" &&
+                  enrollmentStatus.enrolledAt && (
+                    <Text fontSize="sm">
+                      Enrolled on:{" "}
+                      {new Date(
+                        enrollmentStatus.enrolledAt
+                      ).toLocaleDateString()}
+                    </Text>
+                  )}
+                {enrollmentStatus.enrollmentStatus === "COMPLETED" && (
+                  <Text fontSize="sm" color="blue.600">
+                    Course Completed
+                  </Text>
+                )}
+              </Box>
+            ) : (
               <Button
                 colorScheme="red"
-                mb={6}
                 onClick={handleEnroll}
                 isLoading={isPending}
                 loadingText="Enrolling..."
+                mb={6}
               >
                 Enroll Now
               </Button>
-            ) : (
-              <Text fontSize="md" color="green.500" mb={6}>
-                You are enrolled in this course.
-              </Text>
             )}
 
             <Heading size="md" mb={3}>
