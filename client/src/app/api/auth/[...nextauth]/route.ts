@@ -41,7 +41,7 @@ export const authOptions = {
             role: user.role,
             age: user?.age,
             enrollments: user?.enrollments,
-            token: accessToken.token,
+            token: accessToken,
           };
         } catch (error) {
           if (error instanceof Error) {

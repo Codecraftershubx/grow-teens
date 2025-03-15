@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
 import config from "./config";
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || config.apiBaseUrl;
+const apiBaseUrl = `${config.apiBaseUrl}/api/v1`;
 
 interface RequestOptions extends AxiosRequestConfig {
   token?: string;

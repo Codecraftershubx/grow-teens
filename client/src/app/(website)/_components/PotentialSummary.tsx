@@ -3,10 +3,12 @@
 import { Button, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import { RxChevronRight } from "react-icons/rx";
+import { useRouter } from "next/navigation";
 
 const PotentialSummary = () => {
+    const router = useRouter();
   return (
-    <section className="px-[5%] py-16 md:py-24 lg:py-28">
+    <section className="px-[5%] py-10 md:py-24">
       <div className="container mx-auto">
         <div className="flex flex-col items-start">
           <div className="rb-12 mb-12 grid grid-cols-1 items-start justify-between gap-5 md:mb-18 md:grid-cols-2 md:gap-x-12 md:gap-y-8 lg:mb-20 lg:gap-x-20">
@@ -93,7 +95,7 @@ const PotentialSummary = () => {
             </div>
           </div>
           <div className="mt-10 flex items-center gap-4 md:mt-14 lg:mt-16">
-            <Button variant="outline">Join Us</Button>
+            <Button variant="outline" onClick={() => router.push("/auth/signup")}>Join Us</Button>
             <Button rightIcon={<RxChevronRight />} variant="ghost">
               Learn More
             </Button>

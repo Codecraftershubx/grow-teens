@@ -4,11 +4,13 @@ import { Text, Button } from "@chakra-ui/react";
 import Image from "next/image";
 import React from "react";
 import { RxChevronRight } from "react-icons/rx";
+import { useRouter } from "next/navigation";
 import manFixingDevice from "../../../../public/assets/images/man-fixing.svg";
 
 const EmpowerSummary = () => {
+    const router = useRouter();
   return (
-    <section className="px-[5%] py-16 md:py-24 lg:py-28 bg-secondary-200">
+    <section className="px-[5%] py-10 md:py-24 bg-secondary-200">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 gap-y-12 md:grid-cols-2 md:items-center md:justify-between md:gap-x-12 lg:gap-x-20">
           <div>
@@ -49,7 +51,7 @@ const EmpowerSummary = () => {
               </div>
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
-              <Button variant="outline">Join Us</Button>
+              <Button variant="outline" onClick={() => router.push("/auth/signup")}>Join Us</Button>
               <Button variant="ghost">
                 Learn More <RxChevronRight />
               </Button>

@@ -28,9 +28,9 @@ const Dashboard = () => {
     "Remember to take short breaks during study sessions to improve focus!";
 
   const overview: OverviewItem[] = [
-    { id: 1, title: "Courses Enrolled", value: "5" },
-    { id: 2, title: "Completed Modules", value: "10" },
-    { id: 3, title: "Upcoming Deadlines", value: "2" },
+    { id: 1, title: "Courses Enrolled", value: "2" },
+    { id: 2, title: "Completed Modules", value: "0" },
+    { id: 3, title: "Upcoming Deadlines", value: "0" },
   ];
 
   return (
