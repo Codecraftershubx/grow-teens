@@ -8,37 +8,77 @@ datasource db {
 }
 
 model User {
-  id             Int           @id @default(autoincrement())
-  firstName      String
-  lastName       String
-  email          String        @unique
-  password       String
-  role           UserRole      @default(TEEN)
-  age            Int?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  enrollments    Enrollment[]
-  mentor         Mentorship[]  @relation("Mentor")
-  mentee         Mentorship[]  @relation("Mentee")
+  id          Int          @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  email       String       @unique
+  password    String
+  role        UserRole     @default(TEEN)
+  age         Int?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  enrollments Enrollment[]
+  mentee      Mentorship[] @relation("Mentee")
+  mentor      Mentorship[] @relation("Mentor")
+}
+
+model Program {
+  id          Int            @id @default(autoincrement())
+  title       String
+  description String
+  type        ProgramType
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  image       String?
+  modules     CourseModule[]
+  enrollments Enrollment[]
+}
+
+model CourseModule {
+  id          Int     @id @default(autoincrement())
+  programId   Int
+  title       String
+  description String
+  content     String?
+  image       String?
+  program     Program @relation(fields: [programId], references: [id])
+}
+
+model Enrollment {
+  id             Int        @id @default(autoincrement())
+  userId         Int
+  programId      Int
+  enrollmentDate DateTime   @default(now())
+  status         StatusType
+  program        Program    @relation(fields: [programId], references: [id])
+  user           User       @relation(fields: [userId], references: [id])
+}
+
+model Mentorship {
+  id        Int        @id @default(autoincrement())
+  mentorId  Int
+  menteeId  Int
+  startDate DateTime   @default(now())
+  endDate   DateTime?
+  status    StatusType
+  mentee    User       @relation("Mentee", fields: [menteeId], references: [id])
+  mentor    User       @relation("Mentor", fields: [mentorId], references: [id])
+}
+
+model Subscribers {
+  id        Int      @id @default(autoincrement())
+  email     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum UserRole {
   MENTOR
   SPONSORS
   TEEN
-}
-
-model Program {
-  id             Int             @id @default(autoincrement())
-  title          String
-  description    String
-  type           ProgramType     
-  startDate      DateTime
-  endDate        DateTime?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  enrollments    Enrollment[]
-  modules        CourseModule[]
+  ADMIN
 }
 
 enum ProgramType {
@@ -47,38 +87,8 @@ enum ProgramType {
   FINANCIAL_LITERACY
 }
 
-model CourseModule {
-  id          Int       @id @default(autoincrement())
-  programId   Int
-  title       String
-  description String
-  content     String?   
-  program     Program   @relation(fields: [programId], references: [id])
-}
-
-model Enrollment {
-  id             Int       @id @default(autoincrement())
-  userId         Int
-  programId      Int
-  enrollmentDate DateTime  @default(now())
-  status         StatusType
-  user           User    @relation(fields: [userId], references: [id])
-  program        Program @relation(fields: [programId], references: [id])
-}
-
 enum StatusType {
   PENDING
-  ACTIVE 
+  ACTIVE
   COMPLETED
-}
-
-model Mentorship {
-  id         Int       @id @default(autoincrement())
-  mentorId   Int
-  menteeId   Int
-  startDate  DateTime  @default(now())
-  endDate    DateTime?
-  status     StatusType 
-  mentor     User      @relation("Mentor", fields: [mentorId], references: [id])
-  mentee     User      @relation("Mentee", fields: [menteeId], references: [id])
 }

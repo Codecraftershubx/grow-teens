@@ -17,7 +17,6 @@ const useForm = () => {
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log({ email });
   };
   return {
     email,

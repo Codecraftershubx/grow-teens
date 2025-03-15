@@ -6,14 +6,20 @@ const apiBaseUrl = `${config.apiBaseUrl}/api/v1`;
 
 interface RequestOptions extends AxiosRequestConfig {
   token?: string;
-  "Public-Key"?: string;
-  "Secret-Key"?: string;
 }
 
 const getHeaders = (queryParamToken?: string, contentType?: string) => {
-  const auth = Cookies.get("auth")
-    ? JSON.parse(Cookies.get("auth") as string)
-    : {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let auth: any = {};
+  const authCookie = Cookies.get("auth");
+  if (authCookie) {
+    try {
+      auth = JSON.parse(authCookie);
+    } catch (error) {
+      console.error("Error parsing auth cookie", error);
+      auth = {};
+    }
+  }
   const { token, user } = auth;
   const headers: Record<string, string> = {};
 
@@ -23,7 +29,7 @@ const getHeaders = (queryParamToken?: string, contentType?: string) => {
 
   if (token || queryParamToken) {
     const authToken = queryParamToken ? queryParamToken : token;
-    headers["Authorization"] = `Bearer ${authToken}`;
+    headers["Authorization"] = `token ${authToken}`;
   }
 
   if (user) {
@@ -36,12 +42,19 @@ const getHeaders = (queryParamToken?: string, contentType?: string) => {
 const requestClient = (options: RequestOptions = {}) => {
   const headers = getHeaders(options?.token, options?.headers?.["Content-Type"]);
 
-  const opts: RequestOptions = Object.assign({}, options, { headers });
+  // Merge the computed headers with any provided ones
+  const mergedOptions: RequestOptions = {
+    ...options,
+    headers: {
+      ...options.headers,
+      ...headers,
+    },
+  };
 
   const axiosInstance = axios.create({
-    baseURL: `${apiBaseUrl}`,
+    baseURL: apiBaseUrl,
     timeout: 120000,
-    ...opts,
+    ...mergedOptions,
   });
 
   return axiosInstance;

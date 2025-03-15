@@ -3,8 +3,10 @@
 import Image from "next/image";
 import HeroBg from "../../../../public/assets/images/hero-background.svg";
 import { Button, Text } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
+  const router = useRouter();
   return (
     <section id="home" className="flex h-[587px] flex-col">
       <div className="relative flex-1">
@@ -31,7 +33,7 @@ const Hero = () => {
                 the global economy through innovative training and mentorship.
               </Text>
               <div className="mt-6 flex justify-center flex-wrap gap-6 md:mt-8">
-                <Button variant="solid">Join Us</Button>
+                <Button variant="solid" onClick={() => router.push("/signup")}>Join Us</Button>
                 <Button variant="outline">Learn More</Button>
               </div>
             </div>
