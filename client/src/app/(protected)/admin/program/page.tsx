@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useCallback, useEffect, useState, useTransition } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import {
   Box,
   Button,
@@ -30,34 +36,40 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { toast } from "react-toastify";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 import "react-toastify/dist/ReactToastify.css";
 import requestClient from "@/lib/requestClient";
-import { convertDate } from "@/utils/formatDate";
 import { useSession } from "next-auth/react";
 import { NextAuthUserSession } from "@/types";
+import { IoCloudDoneOutline } from "react-icons/io5";
 
 interface Program {
   id: number;
   title: string;
   description: string;
   type: string;
-  startDate: string;
-  endDate?: string;
+  image: string;
 }
 
 interface ProgramFormInputs {
   title: string;
   description: string;
   type: string;
-  startDate: string;
-  endDate?: string;
+  image: File | null;
 }
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
 
 const ProgramManagement = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isPending, startTransition] = useTransition();
+
+  const [programs, setPrograms] = useState<Program[]>([]);
+
+  const [file, setFile] = useState<File | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const session = useSession();
   const data = session.data as NextAuthUserSession;
@@ -67,10 +79,43 @@ const ProgramManagement = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
+    control,
     formState: { errors },
   } = useForm<ProgramFormInputs>();
 
-  const [programs, setPrograms] = useState<Program[]>([]);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0] || null;
+    if (selectedFile) {
+      if (selectedFile.size > MAX_FILE_SIZE) {
+        toast.error(
+          "File size exceeds the 10MB limit. Please upload a smaller file."
+        );
+        setFile(null);
+        setValue("image", null);
+      } else {
+        setFile(selectedFile);
+        setValue("image", selectedFile);
+      }
+    }
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const droppedFile = event.dataTransfer.files?.[0];
+    if (droppedFile) {
+      if (droppedFile.size > MAX_FILE_SIZE) {
+        toast.error(
+          "File size exceeds the 10MB limit. Please upload a smaller file."
+        );
+        setFile(null);
+        setValue("image", null);
+      } else {
+        setFile(droppedFile);
+        setValue("image", droppedFile);
+      }
+    }
+  };
 
   const fetchPrograms = useCallback(() => {
     startTransition(async () => {
@@ -80,20 +125,30 @@ const ProgramManagement = () => {
       if (!response.data) {
         return;
       }
-      setPrograms(response.data);
+      setPrograms(response.data.data);
     });
-  }, [startTransition]);
+  }, [sessionData?.token]);
 
   const onSubmit: SubmitHandler<ProgramFormInputs> = (data) => {
     startTransition(async () => {
       try {
-        await requestClient().post("/programs", {
-          title: data.title,
-          description: data.description,
-          type: data.type.toUpperCase(),
-          startDate: data.startDate,
-          endDate: data.endDate,
-        });
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("description", data.description);
+        formData.append("type", data.type.toUpperCase());
+
+        if (data.image) {
+          formData.append("image", data.image);
+        } else {
+          console.log("No CAC document selected.");
+        }
+
+        await requestClient({
+          token: sessionData?.token,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }).post("/programs", formData);
         toast.success("The new program has been added successfully");
         fetchPrograms();
       } catch (error) {
@@ -106,8 +161,10 @@ const ProgramManagement = () => {
   };
 
   useEffect(() => {
-    fetchPrograms();
-  }, []);
+    if (sessionData) {
+      fetchPrograms();
+    }
+  }, [sessionData, fetchPrograms]);
 
   return (
     <Box p={6} bg="#f5f5f5">
@@ -163,21 +220,72 @@ const ProgramManagement = () => {
                     <Box color="red.500">{errors.type.message}</Box>
                   )}
                 </FormControl>
-                <FormControl isRequired>
-                  <FormLabel>Start Date</FormLabel>
-                  <Input
-                    type="date"
-                    {...register("startDate", {
-                      required: "Start Date is required",
-                    })}
+
+                <FormControl isInvalid={!!errors.image} className="mb-8">
+                  <FormLabel>Image Upload</FormLabel>
+                  <Controller
+                    name="image"
+                    control={control}
+                    rules={{
+                      required: "Material is required",
+                    }}
+                    render={({ field }) => (
+                      <Box
+                        className="border relative p-4 rounded-md"
+                        onClick={() => fileInputRef.current?.click()}
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={(e) => {
+                          handleDrop(e);
+                          field.onChange(e.dataTransfer.files?.[0]);
+                        }}
+                        cursor="pointer"
+                      >
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          accept=".img,.png,.jpg,.jpeg"
+                          onChange={(e) => {
+                            handleFileChange(e);
+                            field.onChange(e.target.files?.[0]);
+                          }}
+                          className="hidden"
+                        />
+                        <Box display="flex" flexDirection="column" gap={2}>
+                          <Box
+                            bg="gray.50"
+                            p={2}
+                            rounded="full"
+                            mx="auto"
+                            mb={4}
+                          >
+                            <IoCloudDoneOutline className="w-6 h-6 text-gray-700" />
+                          </Box>
+                          <Text fontSize="sm" textAlign="center">
+                            <span className="font-semibold text-primary-500">
+                              Click to upload
+                            </span>{" "}
+                            or drag and drop
+                          </Text>
+                          <Text
+                            fontSize="xs"
+                            color="gray.500"
+                            textAlign="center"
+                          >
+                            PDF, DOC or DOCX. Maximum size of 10MB (max.
+                            800x400px)
+                          </Text>
+                          {file && (
+                            <Text fontSize="sm" color="gray.500">
+                              Selected file: {field.value?.name}
+                            </Text>
+                          )}
+                        </Box>
+                      </Box>
+                    )}
                   />
-                  {errors.startDate && (
-                    <Box color="red.500">{errors.startDate.message}</Box>
+                  {errors.type && (
+                    <Box color="red.500">{errors.image?.message}</Box>
                   )}
-                </FormControl>
-                <FormControl>
-                  <FormLabel>End Date</FormLabel>
-                  <Input type="date" {...register("endDate")} />
                 </FormControl>
               </Stack>
             </ModalBody>
@@ -211,19 +319,15 @@ const ProgramManagement = () => {
                 <Th>Title</Th>
                 <Th>Description</Th>
                 <Th>Type</Th>
-                <Th>Start Date</Th>
-                <Th>End Date</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {programs.map((program) => (
+              {programs.map((program, id) => (
                 <Tr key={program.id}>
-                  <Td>{program.id}</Td>
+                  <Td>{id + 1}</Td>
                   <Td>{program.title}</Td>
                   <Td>{program.description}</Td>
                   <Td>{program.type}</Td>
-                  <Td>{program.startDate && convertDate(program.startDate)}</Td>
-                  <Td>{program.endDate || "N/A"}</Td>
                 </Tr>
               ))}
             </Tbody>

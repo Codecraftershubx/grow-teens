@@ -123,7 +123,7 @@ export function Navbar() {
             className="overflow-auto px-[5%] lg:ml-6 lg:flex lg:items-center lg:px-0 lg:[--height-closed:auto] lg:[--height-open:auto]"
           >
             <a
-              href="#"
+              href="/about"
               className="block py-3 text-md first:pt-7 lg:px-4 lg:py-6 lg:text-base first:lg:pt-6"
             >
               About Us
