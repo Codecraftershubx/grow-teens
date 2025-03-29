@@ -1,90 +1,271 @@
 "use client";
 
-import Image from "next/image";
-import HeroBg from "../../../../public/assets/images/hero-background.svg";
-import { Button, HStack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import { Button, Text, Box, Container, Stack } from "@chakra-ui/react";
 import { ArrowRight } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/effect-fade";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { useEffect, useState } from "react";
+
+// Create motion components from Chakra components
+const MotionText = motion(Text);
+const MotionStack = motion(Stack);
+const MotionButton = motion(Button);
+const MotionBox = motion(Box);
+
+// Import your background images
+import HeroBg1 from "../../../../public/assets/images/hero-background.svg";
+import HeroBg2 from "../../../../public/assets/images/hero-background2.svg";
+import HeroBg3 from "../../../../public/assets/images/hero-background3.svg";
 
 const Hero = () => {
   const router = useRouter();
-  return (
-    <section id="home" className="flex flex-col relative pt-20">
-      <div className="flex flex-col items-center justify-between w-full gap-20 px-6 py-14 gap-y-6 lg:flex-row lg:px-20 rounded-3xl">
-        <Text
-          w={{ lg: "xl" }}
-          fontSize={{ base: "3xl", md: "5xl" }}
-          fontWeight={600}
-          color=""
-          className="lg:w-1/2 "
-        >
-          Empowering African Teens for a Brighter Future
-        </Text>
+  const [isVisible, setIsVisible] = useState(false);
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
 
-        <div className="lg:w-1/2">
-          <Text mx="auto" className="text-base md:text-lg ">
-            At GrowTeens, we are dedicated to equipping African teenagers with
-            essential skills for success in the digital age. Our mission is to
-            empower youth to become proactive contributors to the global economy
-            through innovative training and mentorship.
-          </Text>
-          <div className="mt-6 flex flex-wrap gap-6 md:mt-8">
-            <Button variant="solid" onClick={() => router.push("/signup")}>
-              Join Us
-            </Button>
-            <Button variant="outline">Learn More</Button>
-          </div>
-        </div>
+  useEffect(() => {
+    if (inView) {
+      setIsVisible(true);
+    }
+  }, [inView]);
+
+  // Animation variants
+  const containerVariant = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.3,
+        delayChildren: 0.5,
+      },
+    },
+  };
+
+  const itemVariant = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  const buttonVariant = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+    hover: {
+      scale: 1.05,
+      y: -5,
+      transition: { duration: 0.3 },
+      boxShadow: "0px 10px 20px rgba(0,0,0,0.2)",
+    },
+  };
+
+  return (
+    <section id="home" className="relative h-screen" ref={ref}>
+      {/* Carousel Background with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <Swiper
+          modules={[Autoplay, EffectFade, Pagination]}
+          effect="fade"
+          speed={1500}
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+            renderBullet: function (index, className) {
+              return (
+                '<span class="' +
+                className +
+                '" style="background-color: white"></span>'
+              );
+            },
+          }}
+          loop={true}
+          className="h-full w-full"
+        >
+          <SwiperSlide>
+            <div className="relative h-full w-full">
+              <Image
+                src={HeroBg1}
+                alt="Hero Background 1"
+                layout="fill"
+                objectFit="cover"
+                className="w-full h-full"
+                priority
+              />
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className="relative h-full w-full">
+              <Image
+                src={HeroBg2}
+                alt="Hero Background 2"
+                layout="fill"
+                objectFit="cover"
+                className="w-full h-full"
+              />
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className="relative h-full w-full">
+              <Image
+                src={HeroBg3}
+                alt="Hero Background 3"
+                layout="fill"
+                objectFit="cover"
+                className="w-full h-full"
+              />
+            </div>
+          </SwiperSlide>
+        </Swiper>
       </div>
 
-      <Image
-        src={HeroBg}
-        alt="hero"
-        className="hidden w-full h-full md:block"
-        loading="lazy"
-      />
-      {/* <div className="relative flex-1">
-        <div className="absolute inset-0 z-0 bg-secondary-800">
-          <Image
-            src={HeroBg}
-            alt="placeholder image"
-            layout="fill"
-            objectFit="cover"
-            className="absolute inset-0 w-full h-full bg-blend-multiply"
-          />
-          <div className="absolute inset-0 bg-black opacity-40"></div>
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-[5%] space-y-6">
-            <Text
-              w={{ lg: "xl" }}
-              fontSize={{ base: "3xl", md: "5xl" }}
-              fontWeight={600}
-              color="yellow.200"
-              className="drop-shadow-2xl"
+      {/* Content */}
+      <Container maxW="container.xl" h="full" position="relative" zIndex="10">
+        <MotionStack
+          h="full"
+          direction="column"
+          spacing={8}
+          justify="center"
+          align={{ base: "center", lg: "flex-start" }}
+          textAlign={{ base: "center", lg: "left" }}
+          pt={{ base: "20", md: "0" }}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+          variants={containerVariant}
+        >
+          <MotionBox maxW={{ base: "100%", lg: "60%" }} variants={itemVariant}>
+            <MotionText
+              as="h1"
+              fontSize={{ base: "4xl", md: "5xl", lg: "6xl" }}
+              color="white"
+              lineHeight="1.2"
+              className="drop-shadow-xl"
+              mb={4}
+              variants={itemVariant}
             >
               Empowering African Teens for a Brighter Future
-            </Text>
+            </MotionText>
 
-            <div>
-              <Text
-                mx="auto"
-                className="text-base md:text-lg lg:w-2/4 drop-shadow-lg"
-                color="yellow.200"
+            <MotionText
+              fontSize={{ base: "lg", md: "xl" }}
+              color="white"
+              mb={8}
+              maxW={{ base: "full", lg: "xl" }}
+              className="drop-shadow-lg"
+              variants={itemVariant}
+            >
+              At GrowTeens, we are dedicated to equipping African teenagers with
+              essential skills for success in the digital age. Our mission is to
+              empower youth to become proactive contributors to the global
+              economy.
+            </MotionText>
+
+            <MotionStack
+              direction={{ base: "column", sm: "row" }}
+              spacing={{ base: 4, sm: 6 }}
+              align={{ base: "center", lg: "flex-start" }}
+              variants={itemVariant}
+            >
+              <MotionButton
+                size="lg"
+                height="60px"
+                px={8}
+                fontSize="lg"
+                colorScheme="yellow"
+                onClick={() => router.push("/auth/signup")}
+                variants={buttonVariant}
+                whileHover="hover"
+                initial="hidden"
+                animate={isVisible ? "visible" : "hidden"}
               >
-                At GrowTeens, we are dedicated to equipping African teenagers
-                with essential skills for success in the digital age. Our mission
-                is to empower youth to become proactive contributors to the global
-                economy through innovative training and mentorship.
-              </Text>
-              <div className="mt-6 flex justify-center flex-wrap gap-6 md:mt-8">
-                <Button variant="solid" onClick={() => router.push("/signup")}>
-                  Join Us
-                </Button>
-                <Button variant="outline">Learn More</Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
+                Join Our Community
+              </MotionButton>
+
+              <MotionButton
+                size="lg"
+                height="60px"
+                px={8}
+                fontSize="lg"
+                variant="outline"
+                rightIcon={<ArrowRight size={18} />}
+                _hover={{ bg: "whiteAlpha.200" }}
+                onClick={() => router.push("/#about")}
+                variants={buttonVariant}
+                initial="hidden"
+                animate={isVisible ? "visible" : "hidden"}
+              >
+                Learn More
+              </MotionButton>
+            </MotionStack>
+          </MotionBox>
+        </MotionStack>
+      </Container>
+
+      {/* Scroll indicator with enhanced animation */}
+      <MotionBox
+        position="absolute"
+        bottom="10"
+        left="50%"
+        transform="translateX(-50%)"
+        zIndex="10"
+        animate={{
+          y: [0, 10, 0],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          repeatType: "loop",
+        }}
+      >
+        <MotionBox
+          h="10"
+          w="6"
+          border="2px"
+          borderColor="white"
+          borderRadius="full"
+          display="flex"
+          justifyContent="center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+        >
+          <MotionBox
+            w="2"
+            h="2"
+            bg="white"
+            borderRadius="full"
+            mt="2"
+            animate={{
+              y: [0, 5, 0],
+              opacity: [1, 0.5, 1],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              repeatType: "loop",
+            }}
+          />
+        </MotionBox>
+      </MotionBox>
     </section>
   );
 };
