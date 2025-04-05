@@ -46,8 +46,8 @@ export const camelCaseToTitleCase = (str: string) => {
   return result;
 };
 
-export const formatText = (text: string): string => {
+export const formatFirstLetterCaps = (text: string): string => {
   return text
-    .toLowerCase() // Convert to lowercase: "in stock"
-    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letters: "In Stock"
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 };

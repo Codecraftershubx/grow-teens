@@ -14,13 +14,11 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 
-// Create motion components from Chakra components
 const MotionText = motion(Text);
 const MotionStack = motion(Stack);
 const MotionButton = motion(Button);
 const MotionBox = motion(Box);
 
-// Import your background images
 import HeroBg1 from "../../../../public/assets/images/hero-background.svg";
 import HeroBg2 from "../../../../public/assets/images/hero-background2.svg";
 import HeroBg3 from "../../../../public/assets/images/hero-background3.svg";
@@ -77,7 +75,7 @@ const Hero = () => {
   };
 
   return (
-    <section id="home" className="relative h-screen" ref={ref}>
+    <section id="home" className="relative h-screen px-[5%]" ref={ref} >
       {/* Carousel Background with Overlay */}
       <div className="absolute inset-0 z-0">
         <Swiper
@@ -139,7 +137,7 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <Container maxW="container.xl" h="full" position="relative" zIndex="10">
+      <Container maxW="container.xl" mx="auto" h="full" position="relative" zIndex="10">
         <MotionStack
           h="full"
           direction="column"

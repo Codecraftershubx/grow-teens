@@ -110,8 +110,8 @@ export function Navbar() {
           {/* Navigation */}
           <HStack
             spacing={{ md: 4, lg: 8 }}
-            color="blue.400"
-            fontSize={{ md: "sm", lg: "lg" }}
+            color={isScrolled ? "yellow.500" : "white"}
+            fontSize={{ md: "sm", lg: "md" }}
             fontWeight="bold"
             alignItems="center"
             flex="1"

@@ -1,15 +1,23 @@
-import EmpowerSummary from "./_components/EmpowerSummary";
-import Explore from "./_components/Explore";
+import CtaSection from "./_components/CtaSection";
 import Hero from "./_components/Hero";
-import PotentialSummary from "./_components/PotentialSummary";
+import ImpactStats from "./_components/ImpactStats";
+import Newsletter from "./_components/Newsletter";
+import Objectives from "./_components/Objectives";
+import Partners from "./_components/Partners";
+import Programs from "./_components/Programs";
+import Testimonials from "./_components/Testimonials";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <PotentialSummary />
-      <EmpowerSummary />
-      <Explore />
+      <Objectives />
+      <ImpactStats />
+      <Programs />
+      <Testimonials />
+      <Partners />
+      <CtaSection />
+      <Newsletter />
     </>
   );
 }
