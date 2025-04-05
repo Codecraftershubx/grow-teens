@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
-import { Roboto_Flex, Istok_Web } from "next/font/google";
+import { Manrope } from "next/font/google";
 import Provider from "./provider";
 import "./globals.css";
 import GrowTeensLogo from "@public/icons/logo.svg";
 import GrowTeensLogoThumbnailImage from "@public/icons/logo.svg";
 
-const robotoFlex = Roboto_Flex({
-  variable: "--font-roboto-flex",
-  subsets: ["latin"],
-});
-
-const istokWeb = Istok_Web({
-  weight: ["400", "700"],
-  variable: "--font-istok-web",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
 });
 
@@ -55,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="light" suppressHydrationWarning>
       <body
-        className={`${robotoFlex.variable} ${istokWeb.variable} antialiased`}
+        className={`${manrope.variable} antialiased`}
         suppressHydrationWarning
       >
         <Provider>{children}</Provider>

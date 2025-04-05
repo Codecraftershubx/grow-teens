@@ -1,180 +1,172 @@
 "use client";
-import { Image } from "@chakra-ui/react";
+
+import {
+  Box,
+  Container,
+  Grid,
+  Heading,
+  Image,
+  Input,
+  Link,
+  Stack,
+  Text,
+  IconButton,
+  useToast,
+  Button,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 import {
-  BiLogoFacebookCircle,
-  BiLogoInstagram,
-  BiLogoLinkedinSquare,
-  BiLogoYoutube,
-} from "react-icons/bi";
-import { FaXTwitter } from "react-icons/fa6";
-import logo from "@public/assets/images/logo.svg";
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedin,
+  FaYoutube,
+} from "react-icons/fa";
+import logo from "../../../../public/assets/images/logo.svg";
 
-const useForm = () => {
+const Footer = () => {
   const [email, setEmail] = useState("");
-  const handleSetEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
+  const toast = useToast();
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: "Subscribed!",
+      description: "Thank you for subscribing to our newsletter.",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+    setEmail("");
   };
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
-  return {
-    email,
-    handleSetEmail,
-    handleSubmit,
-  };
-};
-
-const linkGroups = [
-  {
-    title: "Quick Links",
-    links: [
-      { label: "About Us", url: "#" },
-      { label: "Our Programs", url: "#" },
-      { label: "Get Involved", url: "#" },
-      { label: "Contact Us", url: "#" },
-      { label: "Success Stories", url: "#" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Blog", url: "#" },
-      { label: "FAQs", url: "#" },
-      { label: "Events", url: "#" },
-      { label: "Partnerships", url: "#" },
-      { label: "Volunteer", url: "#" },
-    ],
-  },
-  {
-    title: "Connect With Us",
-    links: [
-      { label: "Social Media", url: "#" },
-      { label: "Newsletter", url: "#" },
-      { label: "Support Us", url: "#" },
-      { label: "Impact", url: "#" },
-      { label: "Join Us", url: "#" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Licenses", url: "#" },
-      { label: "Privacy Policy", url: "#" },
-      { label: "Cookie Policies", url: "#" },
-      { label: "Terms and Conditions", url: "#" },
-    ],
-  },
-];
-
-const socialIcons = [
-  {
-    label: "Facebook",
-    url: "#",
-    icon: <BiLogoFacebookCircle className="size-6" />,
-  },
-  {
-    label: "Instagram",
-    url: "#",
-    icon: <BiLogoInstagram className="size-6" />,
-  },
-  {
-    label: "Twitter",
-    url: "#",
-    icon: <FaXTwitter className="size-6 p-0.5" />,
-  },
-  {
-    label: "LinkedIn",
-    url: "#",
-    icon: <BiLogoLinkedinSquare className="size-6" />,
-  },
-  {
-    label: "YouTube",
-    url: "#",
-    icon: <BiLogoYoutube className="size-6" />,
-  },
-];
-
-export function Footer() {
-  const formState = useForm();
-
-  const todayDate = new Date().getFullYear();
 
   return (
-    <footer className="px-[5%] py-12 md:py-18 lg:py-20">
-      <div className="container mx-auto">
-        {/* Subscription Area */}
-        <div className="rb-12 mb-12 flex flex-col items-start justify-between md:mb-18 lg:mb-20 lg:flex-row">
-          <div className="rb-6 mb-6 lg:mb-0">
-            <h6 className="font-semibold md:text-md">Subscribe to updates</h6>
-            <p>Stay informed about our latest programs and events.</p>
-          </div>
-          <div className="max-w-md lg:min-w-[25rem]">
-            <form
-              className="mb-3 grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-[1fr_max-content] sm:gap-y-4 md:gap-4"
-              onSubmit={formState.handleSubmit}
-            >
-              <input
-                id="email"
-                type="email"
-                placeholder="Your Email Here"
-                value={formState.email}
-                onChange={formState.handleSetEmail}
+    <Box as="footer" bg="gray.900" color="white" py={{ base: 12, md: 16 }}>
+      <Container maxW="container.xl" px="5%">
+        <Grid
+          templateColumns={{
+            base: "1fr",
+            md: "repeat(2, 1fr)",
+            lg: "2fr 1fr 1fr 1fr",
+          }}
+          gap={{ base: 10, md: 8 }}
+          mb={{ base: 12, md: 16 }}
+        >
+          {/* Logo and description */}
+          <Box maxW={{ md: "full", lg: "90%" }}>
+            <Link href="/" display="inline-block" mb={6}>
+              <Image src={logo.src} alt="GrowTeens Logo" maxW="180px" />
+            </Link>
+            <Text mb={6} color="gray.300">
+              Empowering African teenagers with the skills, knowledge, and
+              support they need to thrive in the digital age and become leaders
+              in their communities.
+            </Text>
+            <Stack direction="row" spacing={4}>
+              <IconButton
+                aria-label="Facebook"
+                icon={<FaFacebook />}
+                colorScheme="whiteAlpha"
+                variant="ghost"
+                borderRadius="full"
               />
-              <button type="submit">Join</button>
+              <IconButton
+                aria-label="Twitter"
+                icon={<FaTwitter />}
+                colorScheme="whiteAlpha"
+                variant="ghost"
+                borderRadius="full"
+              />
+              <IconButton
+                aria-label="Instagram"
+                icon={<FaInstagram />}
+                colorScheme="whiteAlpha"
+                variant="ghost"
+                borderRadius="full"
+              />
+              <IconButton
+                aria-label="LinkedIn"
+                icon={<FaLinkedin />}
+                colorScheme="whiteAlpha"
+                variant="ghost"
+                borderRadius="full"
+              />
+              <IconButton
+                aria-label="YouTube"
+                icon={<FaYoutube />}
+                colorScheme="whiteAlpha"
+                variant="ghost"
+                borderRadius="full"
+              />
+            </Stack>
+          </Box>
+
+          {/* Quick Links */}
+          <Box>
+            <Heading size="md" mb={6}>
+              Quick Links
+            </Heading>
+            <Stack spacing={3}>
+              <Link href="/about" _hover={{ color: "primary.400" }}>
+                About Us
+              </Link>
+              <Link href="/programs" _hover={{ color: "primary.400" }}>
+                Our Programs
+              </Link>
+              <Link href="/mentors" _hover={{ color: "primary.400" }}>
+                Mentors
+              </Link>
+              <Link href="/partners" _hover={{ color: "primary.400" }}>
+                Partners
+              </Link>
+              <Link href="/faq" _hover={{ color: "primary.400" }}>
+                FAQ
+              </Link>
+            </Stack>
+          </Box>
+
+          {/* Contact */}
+          <Box>
+            <Heading size="md" mb={6}>
+              Contact
+            </Heading>
+            <Stack spacing={3} color="gray.300">
+              <Text>26 Innovation Avenue</Text>
+              <Text>Lagos, Nigeria</Text>
+              <Text>contact@growteens.org</Text>
+              <Text>+234 800 123 4567</Text>
+            </Stack>
+          </Box>
+
+          {/* Newsletter */}
+          <Box>
+            <Heading size="md" mb={6}>
+              Stay Updated
+            </Heading>
+            <Text mb={4} color="gray.300">
+              Subscribe to our newsletter for updates on programs, events, and
+              success stories.
+            </Text>
+            <form onSubmit={handleSubscribe}>
+              <Stack direction="row" spacing={3}>
+                <Input
+                  type="email"
+                  placeholder="Your Email Here"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  bg="white"
+                  color="black"
+                />
+                <Button type="submit" colorScheme="primary">
+                  Subscribe
+                </Button>
+              </Stack>
             </form>
-            <p className="text-xs">
-              By subscribing, you accept our Privacy Policy.
-            </p>
-          </div>
-        </div>
-
-        {/* Links Area */}
-        <div className="rb-12 mb-12 grid grid-cols-1 items-start gap-x-8 gap-y-10 sm:grid-cols-3 md:mb-18 md:gap-y-12 lg:mb-20 lg:grid-cols-5">
-          {/* Logo */}
-          <a
-            href="#"
-            className="sm:col-start-1 sm:col-end-4 sm:row-start-1 sm:row-end-2 lg:col-start-auto lg:col-end-auto lg:row-start-auto lg:row-end-auto"
-          >
-             <Image src={logo.src} alt="GrowTeens logo" className="" />
-          </a>
-          {/* Link Groups */}
-          {linkGroups.map((group, idx) => (
-            <div key={idx} className="flex flex-col items-start justify-start">
-              <h6 className="mb-3 font-semibold md:mb-4">{group.title}</h6>
-              <ul>
-                {group.links.map((link, i) => (
-                  <li key={i} className="py-2 text-sm">
-                    <a href={link.url} className="flex items-center gap-3">
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <div className="h-px w-full bg-black" />
-
-        {/* Copyright & Social Icons */}
-        <div className="flex flex-col-reverse items-start pb-4 pt-6 text-sm md:justify-start md:pb-0 md:pt-8 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-col-reverse items-start md:flex-row md:gap-6 lg:items-center">
-            <div className="grid grid-flow-row grid-cols-[max-content] justify-center gap-y-4 md:grid-flow-col md:justify-center md:gap-x-6 md:gap-y-0 lg:text-left">
-              <p className="mt-8 md:mt-0">
-                © {todayDate} GrowTeens. All rights reserved.
-              </p>
-            </div>
-          </div>
-          <div className="mb-8 flex items-center justify-center gap-3 lg:mb-0">
-            {socialIcons.map((social, idx) => (
-              <a key={idx} href={social.url} aria-label={social.label}>
-                {social.icon}
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
-    </footer>
+          </Box>
+        </Grid>
+      </Container>
+    </Box>
   );
-}
+};
+
+export default Footer;

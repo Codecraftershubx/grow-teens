@@ -49,3 +49,29 @@ export const getEnrollmentById = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const getEnrollmentStatus = async (req, res) => {
+  const { userId, courseId } = req.params;
+  try {
+    const enrollment = await prisma.enrollment.findFirst({
+      where: {
+        userId: Number(userId),
+        programId: Number(courseId),
+      },
+      include: { program: true },
+    });
+
+    if (!enrollment) {
+      return res.status(200).json({ enrolled: false });
+    }
+
+    return res.status(200).json({
+      enrolled: true,
+      enrollmentStatus: enrollment.status,
+      enrolledAt: enrollment.enrollmentDate,
+    });
+  } catch (error) {
+    console.error("Error fetching enrollment status:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

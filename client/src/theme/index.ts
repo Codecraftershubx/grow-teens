@@ -5,8 +5,8 @@ import { colors } from "./constants";
 const theme = extendTheme({
     colors,
     fonts: {
-        heading: `"Roboto Flex"', 'sans - serif'`,
-        body: `"Istok Web"', 'sans- serif'`,
+        heading: `"Manrope", sans-serif`,
+        body: `"Manrope", sans-serif`,
     },
     components: {
         Button: buttonTheme,

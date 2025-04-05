@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from "react";
+import React, { useCallback, useEffect, useState, useTransition } from "react";
 import {
   Box,
   Flex,
@@ -16,6 +17,10 @@ import {
   CardBody,
 } from "@chakra-ui/react";
 
+import requestClient from "@/lib/requestClient";
+import { useSession } from "next-auth/react";
+import { NextAuthUserSession } from "@/types";
+
 interface OverviewItem {
   id: number;
   title: string;
@@ -23,6 +28,36 @@ interface OverviewItem {
 }
 
 const Dashboard = () => {
+
+  const [enrolled, setEnrolled] = useState<any | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  const session = useSession();
+  const sessionData = session.data as NextAuthUserSession;
+
+  const fetchEnrolled = useCallback(() => {
+    startTransition(async () => {
+      try {
+        const response = await requestClient({
+          token: sessionData?.user?.token,
+        }).get("/programs");
+        if (!response.data) {
+          return;
+        }
+        setEnrolled(response.data?.data);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    });
+  }, [sessionData?.user?.token]);
+
+  console.log(enrolled, isPending);
+
+    useEffect(() => {
+      if (sessionData?.user) {
+        fetchEnrolled();
+      }
+    }, [fetchEnrolled, sessionData]);
 
   const dailyTip =
     "Remember to take short breaks during study sessions to improve focus!";

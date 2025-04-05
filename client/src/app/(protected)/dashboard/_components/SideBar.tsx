@@ -19,6 +19,7 @@ import { useBreakpointValue } from "@chakra-ui/react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Link from "next/link";
 import { BiMessageDetail } from "react-icons/bi";
+import { FiLayers, FiMessageCircle } from "react-icons/fi";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
@@ -28,6 +29,16 @@ const navigation = [
     href: "/dashboard/messages",
     icon: BiMessageDetail,
     current: false,
+  },
+  {
+    name: 'Flashcards',
+    icon: FiLayers,
+    href: '/flashcards',
+  },
+  {
+    name: 'AI Assistant',
+    icon: FiMessageCircle,
+    href: '/chatbot',
   },
   {
     name: "Settings",
