@@ -32,6 +32,13 @@ const authMiddleware = async (req, res, next) => {
     // Attach the user to the request object for later use
     const { password: _, ...userWithoutPassword } = user;
 
+    prisma.user
+      .update({
+        where: { id: user.id },
+        data: { lastActive: new Date() },
+      })
+      .catch((err) => console.error("Failed to update lastActive:", err));
+
     req.user = userWithoutPassword;
     next();
   } catch (error) {

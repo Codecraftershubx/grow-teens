@@ -23,7 +23,7 @@ import { FiLayers, FiMessageCircle } from "react-icons/fi";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
-  { name: "Programs", href: "/dashboard/course", icon: LuFileText, current: false },
+  { name: "Courses", href: "/dashboard/course", icon: LuFileText, current: false },
   {
     name: "Message",
     href: "/dashboard/messages",
