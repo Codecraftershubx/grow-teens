@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { loginUser, registerUser } from "../controllers/auth.js";
+import { loginUser, registerUser, resendVerification, verifyEmail } from "../controllers/auth.js";
 
 const authRoutes = Router();
 
 authRoutes.post("/signup", registerUser);
 authRoutes.post("/signin", loginUser);
+authRoutes.get("/verify-email/:token", verifyEmail);
+authRoutes.post("/resend-verification", resendVerification);
 
 export default authRoutes;

@@ -20,11 +20,13 @@ import { useBreakpointValue } from "@chakra-ui/react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Link from "next/link";
 import { BiMessageDetail } from "react-icons/bi";
+import { FiBookOpen, FiUsers } from "react-icons/fi";
 
 const navigation = [
-  { name: "User Management", href: "/admin", icon: HomeIcon, current: true },
+  { name: "Dashboard", href: "/admin", icon: HomeIcon, current: true },
+  { name: "User Management", href: "/admin/users", icon: FiUsers, current: false },
   { name: "Program Management", href: "/admin/program", icon: LuFileText, current: false },
-  { name: "Course Management", href: "/admin/course", icon: LuFileText, current: false },
+  { name: "Course Management", href: "/admin/courses", icon: FiBookOpen, current: false },
   { name: "Sponsorship Management", href: "/admin/sponsorship", icon: GiBullseye, current: false },
   {
     name: "Message",
