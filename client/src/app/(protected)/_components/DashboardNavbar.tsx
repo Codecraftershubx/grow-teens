@@ -6,14 +6,11 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import Logo from "@public/assets/images/logo.svg";
 import { signOut, useSession } from "next-auth/react";
 import { NextAuthUserSession } from "@/types";
-import {
-  Avatar,
-} from "@chakra-ui/react";
+import { Avatar, Button } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import GreetingComponent from "./GreetingComponent";
 
 const DashboardNavbar = () => {
-
   const router = useRouter();
   const session = useSession();
   const data = session.data as NextAuthUserSession;
@@ -49,13 +46,11 @@ const DashboardNavbar = () => {
                       aria-hidden="true"
                       className="text-sm font-semibold leading-6 text-gray-900"
                     >
-                      {data?.user.firstName}
+                      {data?.user.firstName + " " + data?.user.lastName}
                     </span>
                     {/* {renderBusinessType(data?.user?.role)} */}
                   </div>
-                  <p className="text-gray-600 text-sm">
-                    {data?.user?.role}
-                  </p>
+                  <p className="text-gray-600 text-sm">{data?.user?.role}</p>
                 </div>
                 <ChevronDownIcon
                   aria-hidden="true"
@@ -68,29 +63,34 @@ const DashboardNavbar = () => {
               className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
             >
               <MenuItem>
-                <button
-                  className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
+                <Button
+                  variant="unstyled"
+                  px={3}
+                  py={1}
                   onClick={() => {
                     if (data?.user?.role === "TEEN") {
                       router.push("/dashboard/settings/personal_information");
                     } else {
-                      router.push("/"); // Fallback route if no role type matches
+                      router.push("/");
                     }
                   }}
                 >
                   View Profile
-                </button>
+                </Button>
               </MenuItem>
               <MenuItem>
-                <button
-                  className="block px-3 py-1 text-sm leading-6 text-red-600 data-[focus]:bg-red-50"
+                <Button
+                  variant="unstyled"
+                  px={3}
+                  py={1}
+                  color={"primary.500"}
                   onClick={async () => {
                     await signOut();
                     router.push("/");
                   }}
                 >
                   Log Out
-                </button>
+                </Button>
               </MenuItem>
             </MenuItems>
           </Menu>

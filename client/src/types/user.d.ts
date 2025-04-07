@@ -44,6 +44,7 @@ interface NextAuthUserSessionWithToken extends JWT {
   id: number;
   role: UserType;
   token: string;
+  emailVerified: boolean;
   account: Account;
   iat: number;
   exp: number;
