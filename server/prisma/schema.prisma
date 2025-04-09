@@ -257,20 +257,20 @@ model UserSkill {
 model Course {
   id                Int               @id @default(autoincrement())
   title             String
-  slug              String            @unique // URL-friendly identifier
+  slug              String            @unique
   description       String            @db.Text
-  overview          String?           @db.Text // Detailed course overview 
+  overview          String?           @db.Text
   thumbnail         String?
-  coverImage        String?           // Larger banner image
-  type              CourseType        // Changed from ProgramType  
+  coverImage        String?          
+  type              CourseType        
   difficulty        DifficultyLevel?
   instructorId      Int?
   durationHours     Int?              // Estimated completion time
   isFeatured        Boolean           @default(false)
   isPublished       Boolean           @default(false) // Replace isActive
-  startDate         DateTime?         // Optional - for cohort-based courses
-  endDate           DateTime?         // Optional - for cohort-based courses
-  enrollmentLimit   Int?              // Maximum number of enrollments allowed
+  startDate         DateTime?         
+  endDate           DateTime?         
+  enrollmentLimit   Int?             
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
   

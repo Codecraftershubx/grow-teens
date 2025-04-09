@@ -50,3 +50,10 @@ interface NextAuthUserSessionWithToken extends JWT {
   exp: number;
   jti: string;
 }
+
+export interface Instructor {
+  id: number;
+  firstName: string;
+  lastName: string;
+  profileImage?: string;
+}
