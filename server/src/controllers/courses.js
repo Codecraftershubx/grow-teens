@@ -3,9 +3,11 @@ import prisma from "../prismaClient.js";
 export const createCourse = async (req, res) => {
   const { title, description, type, difficulty, instructorId, overview, durationHours } = req.body;
   
-  try {
-    const slug = title.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, '-');
+  const slug = title.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, '-');
+
+  console.log("Creating course with data: ", slug);
     
+  try {
     const course = await prisma.course.create({
       data: {
         title,
@@ -20,9 +22,36 @@ export const createCourse = async (req, res) => {
         coverImage: req.coverImageUrl || null,
       },
     });
+
+    console.log("Course created:", course);
+    if (!course) {
+      return res.status(400).json({ error: "Failed to create course" });
+    }
     
     res.status(201).json(course);
   } catch (error) {
+    console.log("Course creation error:", error);
+    
+    // Handle specific Prisma errors with better messages
+    if (error.code === 'P2002') {
+      // This is a unique constraint violation
+      const field = error.meta?.target[0] || 'unknown field';
+      
+      if (field === 'slug') {
+        return res.status(400).json({ 
+          error: `A course with the slug "${slug}" already exists. Please use a different title or provide a custom slug.`,
+          code: 'DUPLICATE_SLUG',
+          field: 'slug'
+        });
+      }
+      
+      return res.status(400).json({
+        error: `A course with this ${field} already exists.`,
+        code: 'UNIQUE_CONSTRAINT',
+        field
+      });
+    }
+    
     res.status(500).json({ error: error.message });
   }
 };
