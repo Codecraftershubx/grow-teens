@@ -1,10 +1,10 @@
-// import { PrismaClient } from 'app/generated/prisma/client'
+import { PrismaClient } from 'app/generated/prisma/client'
 
-import { PrismaClient, StatusType } from '@prisma/client';
+// import { StatusType } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const statusType = StatusType;
+// export const statusType = StatusType;
 
 export async function connectToDB() {
   try {
