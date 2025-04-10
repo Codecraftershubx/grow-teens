@@ -1,4 +1,4 @@
-import prisma, { statusType } from "../prismaClient.js";
+import prisma from "../prismaClient.js";
 
 export const createEnrollment = async (req, res) => {
   const { userId, programId } = req.body;
@@ -22,7 +22,7 @@ export const createEnrollment = async (req, res) => {
       data: {
         userId,
         programId,
-        status: statusType.ACTIVE,
+        // status: statusType.ACTIVE,
       },
     });
 
