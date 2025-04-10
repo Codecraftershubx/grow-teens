@@ -1,4 +1,6 @@
-import { PrismaClient, StatusType } from "@prisma/client";
+import { PrismaClient } from 'app/generated/prisma/client'
+
+import { StatusType } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
