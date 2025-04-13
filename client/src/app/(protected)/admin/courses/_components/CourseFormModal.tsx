@@ -29,8 +29,8 @@ interface FormData {
   difficulty: string;
   durationHours: number;
   instructorId: number;
-  isFeatured: boolean;
-  isPublished: boolean;
+  isFeatured: number;
+  isPublished: number;
 }
 
 interface CourseFormModalProps {
@@ -223,43 +223,33 @@ const CourseFormModal: React.FC<CourseFormModalProps> = ({
               </FormControl>
             </SimpleGrid>
 
-            <SimpleGrid columns={2} spacing={4} mt={2}>
+            <SimpleGrid columns={2} spacing={4} mt={4}>
               <FormControl display="flex" alignItems="center">
-                <Switch
-                  id={isEditMode ? "is-featured-edit" : "is-featured"}
-                  isChecked={formData.isFeatured}
-                  onChange={(e) =>
-                    handleCheckboxChange("isFeatured", e.target.checked)
-                  }
-                  colorScheme="yellow"
-                  mr={3}
-                />
-                <FormLabel
-                  htmlFor={isEditMode ? "is-featured-edit" : "is-featured"}
-                  mb={0}
-                  fontSize="sm"
-                >
-                  Featured Course
+                <FormLabel htmlFor="isPublished" mb="0" fontSize="sm">
+                  Published?
                 </FormLabel>
-              </FormControl>
-
-              <FormControl display="flex" alignItems="center">
                 <Switch
-                  id={isEditMode ? "is-published-edit" : "is-published"}
-                  isChecked={formData.isPublished}
+                  id="isPublished"
+                  name="isPublished"
+                  isChecked={formData.isPublished === 1}
                   onChange={(e) =>
                     handleCheckboxChange("isPublished", e.target.checked)
                   }
-                  colorScheme="green"
-                  mr={3}
                 />
-                <FormLabel
-                  htmlFor={isEditMode ? "is-published-edit" : "is-published"}
-                  mb={0}
-                  fontSize="sm"
-                >
-                  Publish Course
+              </FormControl>
+
+              <FormControl display="flex" alignItems="center">
+                <FormLabel htmlFor="isFeatured" mb="0" fontSize="sm">
+                  Featured?
                 </FormLabel>
+                <Switch
+                  id="isFeatured"
+                  name="isFeatured"
+                  isChecked={formData.isFeatured === 1}
+                  onChange={(e) =>
+                    handleCheckboxChange("isFeatured", e.target.checked)
+                  }
+                />
               </FormControl>
             </SimpleGrid>
           </Stack>
