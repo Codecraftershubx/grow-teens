@@ -20,10 +20,22 @@ export interface Course {
 }
 
 export interface CourseCount {
-    enrollments: number;
-    reviews: number;
-    modules: number;
-  }
+  enrollments: number;
+  reviews: number;
+  modules: number;
+}
+
+export interface CourseData {
+  data: Course[];
+  pagination: Pagination;
+}
+
+export interface Pagination {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
 
 export interface CourseWithModules extends Course {
   modules: Module[];

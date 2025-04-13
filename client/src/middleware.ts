@@ -37,13 +37,17 @@ export async function middleware(request: NextRequest) {
     const allowedPrefix = protectedRoute[role];
 
     if (allowedPrefix && !pathname.startsWith(allowedPrefix)) {
+      const publicPaths = ['/', '/auth/signin', '/auth/signup'];
+      if (publicPaths.includes(pathname)) {
+        return NextResponse.redirect(new URL(allowedPrefix, request.url));
+      }
       return NextResponse.redirect(new URL(allowedPrefix, request.url));
     }
   } else {
-    const innerAppRouteList = Object.values(protectedRoute).find((prefix) =>
+    const matchedProtectedRoute = Object.values(protectedRoute).find((prefix) =>
       pathname.startsWith(prefix)
     );
-    if (innerAppRouteList) {
+    if (matchedProtectedRoute) {
       return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
   }

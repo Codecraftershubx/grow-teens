@@ -2,32 +2,34 @@ import prisma from "../prismaClient.js";
 
 export const createCourse = async (req, res) => {
   // Assuming adminMiddleware ensures req.user exists and has an ID
-  const instructorId = req.user.id; 
+  const instructorId = req.user.id;
   const {
     title,
     description,
     difficulty, // Make sure these match schema names
-    type,       // e.g., CourseType enum
+    type, // e.g., CourseType enum
     category,
     language,
     tags, // Handle tag relations if applicable
     learningOutcomes, // Handle relations if applicable
     requirements, // Handle relations if applicable
-    // isPublished defaults to false unless specified
-    isPublished = false, 
-    isFeatured = false,
+    isPublished: isPublishedStr, // Read as string
+    isFeatured: isFeaturedStr,   // Read as string
   } = req.body;
-
-  // Extract file URLs from the upload middleware (if paths exist)
-  const thumbnail = req.files?.thumbnail?.[0]?.path;
-  const coverImage = req.files?.coverImage?.[0]?.path;
 
   // Basic validation
   if (!title || !description || !difficulty || !type) {
-    return res.status(400).json({ error: "Missing required course fields (title, description, difficulty, type)" });
+    return res.status(400).json({
+      error:
+        "Missing required course fields (title, description, difficulty, type)",
+    });
   }
-  
-  // Add validation for enums (difficulty, type) if needed
+
+  // Convert '1'/'0' strings to boolean. Default to false if undefined/null.
+  const isPublished = isPublishedStr === '1';
+  const isFeatured = isFeaturedStr === '1';
+
+  console.log(req.cloudinaryUrl, " Testiing ", req.coverImageUrl)
 
   try {
     const newCourse = await prisma.course.create({
@@ -37,35 +39,56 @@ export const createCourse = async (req, res) => {
         instructorId,
         difficulty,
         type,
-        category,     // Include optional fields
+        category, // Include optional fields
         language,
-        thumbnail,    // Include file URLs
-        coverImage,
-        isPublished,  // Set publish status
-        isFeatured,
-        slug: title.toLowerCase().replace(/\\s+/g, '-').replace(/[^\\w-]+/g, ''), // Basic slug generation
-        
+        thumbnail: req.cloudinaryUrl || null, // Use URL from request (e.g., set by middleware)
+        coverImage: req.coverImageUrl || null, // Use URL from request (e.g., set by middleware)
+        isPublished, // Use the converted boolean
+        isFeatured,  // Use the converted boolean
+        slug: title
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^\w-]+/g, ""), // Basic slug generation
+
         // Add logic here to handle relations like tags, outcomes, requirements if sent in body
         // e.g., connect existing tags or create new ones based on req.body.tags
       },
-      include: { // Include instructor details in response
+      include: {
+        // Include instructor details in response
         instructor: {
-          select: { id: true, firstName: true, lastName: true, profileImage: true },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profileImage: true,
+          },
         },
       },
     });
     res.status(201).json(newCourse);
   } catch (error) {
     console.error("Error creating course:", error);
-     if (error.code === 'P2002' && error.meta?.target?.includes('slug')) {
-       return res.status(409).json({ error: 'A course with a similar title (slug) already exists.' });
-     }
-    res.status(500).json({ error: "Failed to create course", details: error.message });
+    if (error.code === "P2002" && error.meta?.target?.includes("slug")) {
+      return res.status(409).json({
+        error: "A course with a similar title (slug) already exists.",
+      });
+    }
+    res
+      .status(500)
+      .json({ error: "Failed to create course", details: error.message });
   }
 };
 
 export const getCourses = async (req, res) => {
-  const { page = 1, limit = 10, type, difficulty, search, sortBy = 'createdAt', order = 'asc' } = req.query;
+  const {
+    page = 1,
+    limit = 10,
+    type,
+    difficulty,
+    search,
+    sortBy = "createdAt",
+    order = "asc",
+  } = req.query;
 
   try {
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -84,10 +107,15 @@ export const getCourses = async (req, res) => {
       ];
     }
 
-    const validSortFields = ['createdAt', 'title', 'difficulty', 'enrollmentsCount']; // Add more if needed
-    const sortField = validSortFields.includes(sortBy) ? sortBy : 'createdAt';
-    const sortOrder = order === 'asc' ? 'asc' : 'desc';
-    
+    const validSortFields = [
+      "createdAt",
+      "title",
+      "difficulty",
+      "enrollmentsCount",
+    ]; // Add more if needed
+    const sortField = validSortFields.includes(sortBy) ? sortBy : "createdAt";
+    const sortOrder = order === "asc" ? "asc" : "desc";
+
     let orderBy = { [sortField]: sortOrder };
 
     // Special handling if sorting by enrollment count (requires aggregation)
@@ -103,11 +131,16 @@ export const getCourses = async (req, res) => {
         orderBy,
         include: {
           instructor: {
-            select: { id: true, firstName: true, lastName: true, profileImage: true },
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              profileImage: true,
+            },
           },
-           _count: {
-             select: { enrollments: true } // Include enrollment count
-           }
+          _count: {
+            select: { enrollments: true }, // Include enrollment count
+          },
         },
       }),
       prisma.course.count({ where }),
@@ -136,29 +169,50 @@ export const getCourseById = async (req, res) => {
       where: { id: parseInt(id) },
       include: {
         instructor: {
-          select: { id: true, firstName: true, lastName: true, profileImage: true, bio: true },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            profileImage: true,
+            bio: true,
+          },
         },
         modules: {
-          orderBy: { order: 'asc' }, // Assuming modules have an order field
-          select: { 
-            id: true, 
-            title: true, 
-            order: true, 
+          orderBy: { order: "asc" }, // Assuming modules have an order field
+          select: {
+            id: true,
+            title: true,
+            order: true,
             description: true,
             // Optionally include content units if needed for overview
-            // contentUnits: { 
+            // contentUnits: {
             //   orderBy: { order: 'asc' },
             //   select: { id: true, title: true, contentType: true, duration: true }
             // }
           },
         },
-        reviews: { // Include reviews
-           orderBy: { createdAt: 'desc' },
-           select: { id: true, rating: true, comment: true, createdAt: true, user: { select: { id: true, firstName: true, lastName: true, profileImage: true }} }
+        reviews: {
+          // Include reviews
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            rating: true,
+            comment: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                profileImage: true,
+              },
+            },
+          },
         },
-        _count: { // Include counts
-          select: { enrollments: true, reviews: true, modules: true }
-        }
+        _count: {
+          // Include counts
+          select: { enrollments: true, reviews: true, modules: true },
+        },
         // Add includes for tags, requirements, outcomes if needed
       },
     });
@@ -169,17 +223,19 @@ export const getCourseById = async (req, res) => {
 
     // Check if the course is published before returning
     if (!course.isPublished) {
-       // Check if the user is the instructor or an admin (if auth middleware was optionally used)
-       // if (req.user && (req.user.id === course.instructorId || req.user.role === 'ADMIN')) {
-       //    return res.status(200).json(course); 
-       // }
+      // Check if the user is the instructor or an admin (if auth middleware was optionally used)
+      // if (req.user && (req.user.id === course.instructorId || req.user.role === 'ADMIN')) {
+      //    return res.status(200).json(course);
+      // }
       return res.status(403).json({ error: "This course is not available" });
     }
 
     res.status(200).json(course);
   } catch (error) {
     console.error("Course fetch error:", error);
-    res.status(500).json({ error: "Failed to retrieve course", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to retrieve course", details: error.message });
   }
 };
 
@@ -193,26 +249,40 @@ export const updateCourse = async (req, res) => {
     instructorId,
     overview,
     durationHours,
-    isPublished,
-    isFeatured,
+    isPublished: isPublishedStr, // Read as string
+    isFeatured: isFeaturedStr,   // Read as string
   } = req.body;
 
   try {
+    const dataToUpdate = {
+      // Initialize with fields that might be updated
+      title,
+      description,
+      overview,
+      type,
+      difficulty,
+      instructorId: instructorId ? parseInt(instructorId) : undefined,
+      durationHours: durationHours ? parseInt(durationHours) : undefined,
+      thumbnail: req.cloudinaryUrl || undefined, // Use URL if present, otherwise keep existing
+      coverImage: req.coverImageUrl || undefined, // Use URL if present, otherwise keep existing
+    };
+
+    // Convert '1'/'0' strings to boolean only if they are present in the body
+    if (isPublishedStr !== undefined) {
+      dataToUpdate.isPublished = isPublishedStr === '1';
+    }
+    if (isFeaturedStr !== undefined) {
+      dataToUpdate.isFeatured = isFeaturedStr === '1';
+    }
+
+    // Remove undefined fields so Prisma doesn't try to set them to null
+    Object.keys(dataToUpdate).forEach(
+      (key) => dataToUpdate[key] === undefined && delete dataToUpdate[key]
+    );
+
     const course = await prisma.course.update({
       where: { id: parseInt(id) },
-      data: {
-        title,
-        description,
-        overview,
-        type,
-        difficulty,
-        instructorId: instructorId ? parseInt(instructorId) : undefined,
-        durationHours: durationHours ? parseInt(durationHours) : undefined,
-        thumbnail: req.cloudinaryUrl || undefined,
-        coverImage: req.coverImageUrl || undefined,
-        isPublished,
-        isFeatured,
-      },
+      data: dataToUpdate, // Pass the dynamically built object
     });
 
     res.status(200).json(course);
@@ -429,13 +499,16 @@ export const enrollInCourse = async (req, res) => {
     }
 
     if (!course.isPublished) {
-      return res.status(403).json({ error: "Cannot enroll in an unpublished course" });
+      return res
+        .status(403)
+        .json({ error: "Cannot enroll in an unpublished course" });
     }
 
     // 2. Check if user is already enrolled
     const existingEnrollment = await prisma.enrollment.findUnique({
       where: {
-        userId_courseId: { // Using the compound unique key
+        userId_courseId: {
+          // Using the compound unique key
           userId: userId,
           courseId: parseInt(courseId),
         },
@@ -443,10 +516,10 @@ export const enrollInCourse = async (req, res) => {
     });
 
     if (existingEnrollment) {
-      return res.status(409).json({ 
-        error: "Already enrolled in this course", 
-        enrollment: existingEnrollment // Optionally return existing enrollment
-      }); 
+      return res.status(409).json({
+        error: "Already enrolled in this course",
+        enrollment: existingEnrollment, // Optionally return existing enrollment
+      });
     }
 
     // 3. Create the enrollment
@@ -458,18 +531,20 @@ export const enrollInCourse = async (req, res) => {
         progressPercentage: 0, // Default progress
         // enrollmentDate is handled by @default(now())
       },
-      include: { // Include course details in the response
+      include: {
+        // Include course details in the response
         course: {
-          select: { id: true, title: true, slug: true }
-        }
-      }
+          select: { id: true, title: true, slug: true },
+        },
+      },
     });
 
     res.status(201).json({ message: "Successfully enrolled", enrollment });
-
   } catch (error) {
     console.error("Enrollment error:", error);
-    res.status(500).json({ error: "Failed to enroll in course", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to enroll in course", details: error.message });
   }
 };
 
@@ -520,13 +595,14 @@ export const getEnrolledCourses = async (req, res) => {
 
   try {
     const enrollments = await prisma.enrollment.findMany({
-      where: { 
+      where: {
         userId: userId,
-        status: { not: "UNENROLLED" } // Optionally filter out un-enrolled courses
+        status: { not: "UNENROLLED" }, // Optionally filter out un-enrolled courses
       },
-      orderBy: { enrollmentDate: 'desc' }, // Show most recent first
+      orderBy: { enrollmentDate: "desc" }, // Show most recent first
       include: {
-        course: { // Include details of the enrolled course
+        course: {
+          // Include details of the enrolled course
           select: {
             id: true,
             title: true,
@@ -534,12 +610,13 @@ export const getEnrolledCourses = async (req, res) => {
             thumbnail: true,
             difficulty: true,
             type: true,
-            instructor: { // Include instructor info
-              select: { id: true, firstName: true, lastName: true }
-            }
+            instructor: {
+              // Include instructor info
+              select: { id: true, firstName: true, lastName: true },
+            },
             // Add other course fields needed for the user's dashboard/list
-          }
-        }
+          },
+        },
         // Include ModuleProgress or UnitProgress if needed for overview
         // moduleProgress: { select: { id: true, completed: true, moduleId: true } }
       },
@@ -554,10 +631,12 @@ export const getEnrolledCourses = async (req, res) => {
     // (Your schema has progressPercentage on Enrollment, which is good)
 
     res.status(200).json(enrollments);
-
   } catch (error) {
     console.error("Error fetching enrolled courses:", error);
-    res.status(500).json({ error: "Failed to retrieve enrolled courses", details: error.message });
+    res.status(500).json({
+      error: "Failed to retrieve enrolled courses",
+      details: error.message,
+    });
   }
 };
 
@@ -730,8 +809,6 @@ export const getAdminCourses = async (req, res) => {
     isFeatured,
   } = req.query;
 
-  console.log("Courses fetched: ", req.query);
-
   try {
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
@@ -789,7 +866,6 @@ export const getAdminCourses = async (req, res) => {
       prisma.course.count({ where }),
     ]);
 
-    console.log("Courses fetched:", courses);
     if (courses.length === 0) {
       return res.status(404).json({ message: "No courses found" });
     }
@@ -801,7 +877,7 @@ export const getAdminCourses = async (req, res) => {
 
     // Return results with pagination info
     res.status(200).json({
-      courses,
+      data: courses,
       pagination: {
         total,
         page: parseInt(page),
@@ -860,7 +936,7 @@ export const getContentUnitsByModule = async (req, res) => {
   try {
     const units = await prisma.contentUnit.findMany({
       where: { moduleId: parseInt(moduleId) },
-      orderBy: { order: 'asc' }, // Assuming an 'order' field exists for sequencing
+      orderBy: { order: "asc" }, // Assuming an 'order' field exists for sequencing
     });
     if (!units) {
       // Even if empty, it's not an error, just no units found
@@ -882,7 +958,7 @@ export const getContentUnitById = async (req, res) => {
   try {
     const unit = await prisma.contentUnit.findUnique({
       where: { id: parseInt(id) },
-       include: { attachments: true } // Include attachments if needed
+      include: { attachments: true }, // Include attachments if needed
     });
     if (!unit) {
       return res.status(404).json({ error: "Content unit not found" });
@@ -917,11 +993,14 @@ export const updateContentUnit = async (req, res) => {
         // Add other updatable fields from your schema as needed
       },
     });
-    res.status(200).json({ message: "Content unit updated successfully", unit });
+    res
+      .status(200)
+      .json({ message: "Content unit updated successfully", unit });
   } catch (error) {
-     if (error.code === 'P2025') { // Handle case where unit to update doesn't exist
-        return res.status(404).json({ error: 'Content unit not found' });
-      }
+    if (error.code === "P2025") {
+      // Handle case where unit to update doesn't exist
+      return res.status(404).json({ error: "Content unit not found" });
+    }
     console.error("Error updating content unit:", error);
     res.status(500).json({ error: "Failed to update content unit" });
   }
@@ -944,11 +1023,11 @@ export const deleteContentUnit = async (req, res) => {
     });
     res.status(200).json({ message: "Content unit deleted successfully" });
   } catch (error) {
-     if (error.code === 'P2025') { // Handle case where unit to delete doesn't exist
-        return res.status(404).json({ error: 'Content unit not found' });
-      }
+    if (error.code === "P2025") {
+      // Handle case where unit to delete doesn't exist
+      return res.status(404).json({ error: "Content unit not found" });
+    }
     console.error("Error deleting content unit:", error);
     res.status(500).json({ error: "Failed to delete content unit" });
   }
 };
-
